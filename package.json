@@ -1,0 +1,25 @@
+{
+  "name": "saferoutetoschool",
+  "version": "0.0.1",
+  "description": "https://unfallatlas.statistikportal.de/",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tnier01/SafeRouteToSchool.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tnier01/SafeRouteToSchool/issues"
+  },
+  "homepage": "https://github.com/tnier01/SafeRouteToSchool#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "leaflet": "^1.7.1"
+  }
+}
