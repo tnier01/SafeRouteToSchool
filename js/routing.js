@@ -23,6 +23,11 @@ var routeLayer = new L.LayerGroup();
 routeLayer.addTo(mymap);
 var markerLayer = new L.LayerGroup();
 markerLayer.addTo(mymap);
+var areaLayer = new L.LayerGroup();
+areaLayer.addTo(mymap);
+
+
+
 
 function createButton(label, container, id) {
 	var btn = L.DomUtil.create('button', '', container);
@@ -34,7 +39,7 @@ function createButton(label, container, id) {
 }
 
 function addToMap(geojson, LayerGroup, color) {
-	// LayerGroup.clearLayers();
+	//LayerGroup.clearLayers();
 	let geometry = L.geoJson(geojson, {
 		"color": color
 	});
@@ -72,6 +77,11 @@ $("#submit").click(function (e) {
 		let start = $("#start").val();
         let finish = $("#finish").val();
         let profile = $("input[name='transport']:checked").val();
+        console.log(class3)
+        addToMap(class5, areaLayer, "#800000")
+        addToMap(class4, areaLayer, "#b30000")
+        addToMap(class3, areaLayer, "#ff1a1a")
+        addToMap(class2, areaLayer, "#ff8080")
 
 		if (start != "" && finish != "") {
 			var toCoordinates = function (coordString) {
@@ -81,23 +91,7 @@ $("#submit").click(function (e) {
 
 				return [lng, lat];
             }
-            avoid = {
-                "type": "MultiPolygon",
-                "coordinates": [ 
-                  [
-                    [[7.608461380004882, 51.96505306750262], [7.619447708129882, 51.96505306750262],[7.619447708129882,51.96944221561243],[7.608461380004882, 51.96944221561243],[7.608461380004882,51.96505306750262]]
-                  ],
-                  [
-                    [[7.6289963722229, 51.96699650839783],[7.632451057434082,51.96699650839783],[ 7.632451057434082, 51.968939865022485],[7.6289963722229, 51.968939865022485],[7.6289963722229,51.96699650839783]]
-                  ]
-                ]
-              }
-
             
-            
-  
-
-              addToMap(avoid, routeLayer, "yellow")
 
 			if (isNaN(start.split(",")[0])) {
 				$.ajax({
