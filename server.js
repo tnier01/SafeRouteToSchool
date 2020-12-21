@@ -8,6 +8,7 @@ app.use("/leaflet", express.static(__dirname + "/node_modules/leaflet/dist"));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 
 app.use("/data", express.static(__dirname + '/data'))
+app.use("/private", express.static(__dirname + '/private'))
 
 
 app.get('/', (req, res) => {

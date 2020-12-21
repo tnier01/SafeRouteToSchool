@@ -13,6 +13,7 @@
 	<link rel="stylesheet" href="/leaflet/leaflet.css"/>
 	<script src="/leaflet/leaflet.js"></script>
 	<script src="jquery/jquery.min.js"></script>
+	<script src="/private/tokens.js"></script>
 
 
 </head>
@@ -20,8 +21,51 @@
 <body>
 
 	<div id="mapid" style="width: 1350px; height: 600px;"></div>
+	<div class="sidebar">
+        <!-- <button id="closeNav" class="navButton">&times;</button> -->
+        <div class="sidebar" id="ajaxLoad"></div>
+        <table>
+            <tr>
+                <td><span>Transport:</span></td>
+                <td>
+                    <input type="radio" class="transport" name="transport" value="driving-car"> Car
+                    <input type="radio" class="transport" name="transport" value="cycling-regular" checked> Bicycle
+                    <input type="radio" class="transport" name="transport" value="foot-walking"> Pedestrian
+                    <!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
+                </td>
+            </tr>
+            <tr>
+                <td><label for="start">Start:</label></td>
+                <td><input type="text" class="input" id="start" name="Start"></td>
+            </tr>
+            <tr>
+                <td><label for="finish">Finish:</label></td>
+                <td><input type="text" class="input" id="finish" name="Finish"></td>
+            </tr>
+            <tr>
+                <td><button id="submit" class="button">Submit</button></td>
+                <td></td>
+            </tr>
+        </table>
+        <div id="navigationInfo" class="navInfo">
+            <h3>Instructions:</h3>
+            <ul style="list-style-type: none;" id="navList"></ul>
+        </div>
+
+    </div>
+    <div id="info"></div>
+    <div id="inputStop">
+        <div id="introduction">
+            <ul>
+                <li><p>Use the first slider to define how old the records can be</p></li>
+                <li><p>Use the second slider to define the minimum value of pM10 concentration (>40μg/&#13221; could potentially be harmful over time)</p></li>
+                <li><p>click on the map to select start and destination or input them manually</p></li>
+            </ul>
+        </div>
+    </div>
 	<!-- <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
 	<script src="js/L.TileLayer.BetterWMS.js"></script>
+	
 	<script>
 
 		var mymap = L.map('mapid').setView([51.9606649, 7.6261347], 13);
@@ -52,6 +96,7 @@
 		}).addTo(mymap);
 
 	</script>
+	<script src="js/routing.js"></script>
 
 
 
