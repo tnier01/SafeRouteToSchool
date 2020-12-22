@@ -31,7 +31,7 @@ npm install
 
 4. Rename the tokens_template.js file inside the private folder to tokens.js
 
-5. Add your key, received in step 3, at the routing spot in the tokens.js file
+5. Add your key, received in step 3, at the routing spot in the tokens.js file https://github.com/tnier01/SafeRouteToSchool/blob/5866e4ee6efe6e99e56d11f3581071d5d458cbc3/private/tokens_template.js#L5
 
 6. Start the application
 ```sh
