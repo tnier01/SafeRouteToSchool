@@ -72,16 +72,18 @@ function setAddress(pos, selector) {
 	});
 }
 
+addToMap(class5, areaLayer, "#800000")
+addToMap(class4, areaLayer, "#b30000")
+addToMap(class3, areaLayer, "#ff1a1a")
+addToMap(class2, areaLayer, "#ff8080")
+
 // submit the data to the openrouteservice api and precess results
 $("#submit").click(function (e) {
 		let start = $("#start").val();
         let finish = $("#finish").val();
         let profile = $("input[name='transport']:checked").val();
-        console.log(class3)
-        addToMap(class5, areaLayer, "#800000")
-        addToMap(class4, areaLayer, "#b30000")
-        addToMap(class3, areaLayer, "#ff1a1a")
-        addToMap(class2, areaLayer, "#ff8080")
+        let risk = $("input[name='risk']:checked").val();
+
 
 		if (start != "" && finish != "") {
 			var toCoordinates = function (coordString) {
@@ -117,17 +119,18 @@ $("#submit").click(function (e) {
 			} else {
 				finish = toCoordinates(finish);
 			}
-			try {
+			if(risk !== "none") {
 				data = {
 					"coordinates": [
 						start, finish
 					],
 					"options": {
-                        "avoid_polygons":  avoid
+                        "avoid_polygons": eval(risk)
                     }
 				}
 				console.log(data);
-			} catch {
+            }
+            else {
 				data = {
 					"coordinates": [
 						start, finish
@@ -163,7 +166,9 @@ $("#submit").click(function (e) {
 
 // add route to map with instructions
 function addRouteFeatures(geojson) {
-	addToMap(geojson.features[0], routeLayer, "#00c800");
+    routeLayer.clearLayers()+
+    addToMap(geojson.features[0], routeLayer, "#00c800");
+
 
 	markerLayer.clearLayers();
 	var addNavInfo = function (geojson) {
