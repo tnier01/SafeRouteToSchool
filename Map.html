@@ -11,8 +11,12 @@
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
 	<link rel="stylesheet" href="/leaflet/leaflet.css"/>
+	<link rel="stylesheet" src="css/style.css"/>
+
 	<script src="/leaflet/leaflet.js"></script>
 	<script src="jquery/jquery.min.js"></script>
+	<script src="data/accidents.js"></script>
+
 
 
 </head>
@@ -20,8 +24,6 @@
 <body>
 
 	<div id="mapid" style="width: 1350px; height: 600px;"></div>
-	<!-- <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
-	<script src="js/L.TileLayer.BetterWMS.js"></script>
 	<script>
 
 		var mymap = L.map('mapid').setView([51.9606649, 7.6261347], 13);
@@ -35,24 +37,10 @@
 			zoomOffset: -1
 		}).addTo(mymap);
 
-		/**
-		var wmsLayer = L.tileLayer.wms('https://www.wms.nrw.de/wms/unfallatlas?', {
-			layers: 'Unfallorte_2019',
-			format: 'image/png',
-			transparent: true
-			//format: 'application/geojson'
-		}
-		).addTo(mymap);
-		*/
-
-		L.tileLayer.betterWms('https://www.wms.nrw.de/wms/unfallatlas?', {
-			layers: 'Unfallorte_2019',
-			transparent: true,
-			format: 'image/png'
-		}).addTo(mymap);
 
 	</script>
 
+<script src="js/accidents.js"></script>
 
 
 </body>
