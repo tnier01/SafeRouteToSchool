@@ -175,7 +175,8 @@ function proofPointsInPolygon(buffer){
 }
 // add route to map with instructions
 function addRouteFeatures(geojson) {
-    routeLayer.clearLayers();
+	routeLayer.clearLayers();
+	removeHighlight();
 	addToMap(geojson.features[0], routeLayer, "#00c800");
 	var buffered = turf.buffer(geojson, 50, {units: 'meters'});
 	addToMap(buffered, routeLayer, "#00c804");

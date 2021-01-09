@@ -19,7 +19,6 @@ avoid = {
       ]
     ]
   }
-  console.log(avoid)
 
 for(var element of areas.features){
     switch(element.properties.class) {
