@@ -164,10 +164,16 @@ $("#submit").click(function (e) {
 		}
 	});
 
+function proofPointsInPolygon(buffer){
+}
 // add route to map with instructions
 function addRouteFeatures(geojson) {
-    routeLayer.clearLayers()+
-    addToMap(geojson.features[0], routeLayer, "#00c800");
+    routeLayer.clearLayers();
+	addToMap(geojson.features[0], routeLayer, "#00c800");
+	var buffered = turf.buffer(geojson, 50, {units: 'meters'});
+	addToMap(buffered, routeLayer, "#00c804");
+
+	let pointsInsidePolygon = proofPointsInPolygon(buffered)
 
 
 	markerLayer.clearLayers();

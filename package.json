@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/tnier01/SafeRouteToSchool#readme",
   "dependencies": {
+    "@turf/turf": "^5.1.6",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
-    "leaflet": "^1.7.1"
+    "leaflet": "^1.7.1",
+    "turf": "^3.0.14"
   }
 }
