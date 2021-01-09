@@ -165,6 +165,13 @@ $("#submit").click(function (e) {
 	});
 
 function proofPointsInPolygon(buffer){
+	let pointsInsidePolygon = []
+	for (let point of accidents.features){
+		if(turf.booleanContains(buffer, point)){
+			pointsInsidePolygon.push(point)
+		}
+	}
+	return pointsInsidePolygon;
 }
 // add route to map with instructions
 function addRouteFeatures(geojson) {
@@ -173,7 +180,8 @@ function addRouteFeatures(geojson) {
 	var buffered = turf.buffer(geojson, 50, {units: 'meters'});
 	addToMap(buffered, routeLayer, "#00c804");
 
-	let pointsInsidePolygon = proofPointsInPolygon(buffered)
+	let pointsInsidePolygon = proofPointsInPolygon(buffered.features[0]);
+	highlight(pointsInsidePolygon)
 
 
 	markerLayer.clearLayers();
@@ -205,4 +213,21 @@ function addRouteFeatures(geojson) {
 	];
 	mymap.flyToBounds(bbox);
 
+}
+
+function highlight(pointsInsidePolygon) {
+    accidentMarkers.eachLayer(function (layer){
+		for (var point of pointsInsidePolygon){
+			if(layer.feature.properties.OBJECTID ==  point.properties.OBJECTID){
+				layer.setStyle({fillColor :'blue'});
+			}
+		}
+	})
+
+}
+
+function removeHighlight(){
+    accidentMarkers.eachLayer(function (layer){
+				layer.setStyle(style(layer.feature));
+	})
 }

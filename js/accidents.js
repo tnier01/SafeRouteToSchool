@@ -18,7 +18,7 @@ function popup(feature, layer) {
     layer.bindPopup("time: " + feature.properties.USTUNDE + " h")
 }
 
-L.geoJSON(accidents, {
+accidentMarkers = L.geoJSON(accidents, {
     pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, style(feature));
     },
