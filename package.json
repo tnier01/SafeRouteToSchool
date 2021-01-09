@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tnier01/SafeRouteToSchool#readme",
   "dependencies": {
+    "chart.js": "^2.9.4",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
     "leaflet": "^1.7.1"
