@@ -11,14 +11,16 @@
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
 	<link rel="stylesheet" href="/leaflet/leaflet.css"/>
+	<link rel="stylesheet" src="css/style.css"/>
+
 	<script src="/leaflet/leaflet.js"></script>
 	<script src="/jquery/jquery.min.js"></script>
 	<script src="/turf/turf.min.js"></script>
 	<script src="/private/tokens.js"></script>
 	<script src="data/desnsityAreas.js"></script>
 	<script src="/js/createPolygons.js"></script>
+	<script src="data/accidents.js"></script>
 
-	
 
 
 </head>
@@ -80,25 +82,11 @@
 			zoomOffset: -1
 		}).addTo(mymap);
 
-		/**
-		var wmsLayer = L.tileLayer.wms('https://www.wms.nrw.de/wms/unfallatlas?', {
-			layers: 'Unfallorte_2019',
-			format: 'image/png',
-			transparent: true
-			//format: 'application/geojson'
-		}
-		).addTo(mymap);
-		*/
-
-		L.tileLayer.betterWms('https://www.wms.nrw.de/wms/unfallatlas?', {
-			layers: 'Unfallorte_2019',
-			transparent: true,
-			format: 'image/png'
-		}).addTo(mymap);
 
 	</script>
 	<script src="js/routing.js"></script>
 
+<script src="js/accidents.js"></script>
 
 
 </body>
