@@ -193,7 +193,7 @@ $("#submit").click(function (e) {
 		routes.push(requestDatafromOpenRouteService(profile, data, "class5"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
-		console.log(route);
+
 		// if there is not already a layer selection for the routes, it is added 
 		if (routeLayerSelectionActive === false) {
 
@@ -327,28 +327,20 @@ mymap.on('overlayadd', function (eo) {
  */
 function HiglightingForCheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
-		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			highlight(pointsInsidePolygon);
-		}, 10);
 	}
 	if (layerName === 'level 5') {
-		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
 			highlight(pointsInsidePolygon);
-		}, 10);
 	}
 	if (layerName === 'level 4') {
-		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
 			highlight(pointsInsidePolygon);
-		}, 10);
 	}
 	if (layerName === 'level 3') {
-		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
 			highlight(pointsInsidePolygon);
-		}, 10);
 	}
 }
 
@@ -377,28 +369,20 @@ mymap.on('overlayremove ', function (eo) {
  */
 function RemoveHighlightingForUncheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
-		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			removeHighlight(pointsInsidePolygon);
-		}, 10);
 	}
 	if (layerName === 'level 5') {
-		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
 			removeHighlight(pointsInsidePolygon);
-		}, 10);
 	}
 	if (layerName === 'level 4') {
-		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
 			removeHighlight(pointsInsidePolygon);
-		}, 10);
 	}
 	if (layerName === 'level 3') {
-		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
 			removeHighlight(pointsInsidePolygon);
-		}, 10);
 	}
 }
 
