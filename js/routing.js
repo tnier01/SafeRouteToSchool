@@ -193,10 +193,9 @@ $("#submit").click(function (e) {
 		routes.push(requestDatafromOpenRouteService(profile, data, "class5"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
-
+		console.log(route);
 		// if there is not already a layer selection for the routes, it is added 
 		if (routeLayerSelectionActive === false) {
-			routeLayerSelectionActive = true;
 
 			layersControl.addOverlay(noneLayer, "none");
 			layersControl.addOverlay(class5Layer, "level 5");
@@ -239,6 +238,13 @@ function addRouteToMap(route, layer) {
 		addToMap(noneBuffered, noneLayer, "#00c804");
 
 		navigationInfo(route, layer);
+
+		// the noneLayer is shown initially, thats why the highlighting is not activated as usually by the user (function mymap.on('overlayadd', function (eo))
+		if (routeLayerSelectionActive === false) {
+			routeLayerSelectionActive = true;
+			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
+			highlight(pointsInsidePolygon);
+		}
 	}
 
 	if (layer === "class5Layer") {
@@ -311,67 +317,90 @@ function navigationInfo(route, layer) {
 	$("#navigationInfo").show();
 }
 
+// event if one layer is activated in the layers control 
+mymap.on('overlayadd', function (eo) {
+	HiglightingForCheckedLayersInLayerControl(eo.name);
+}); 
+
 /**
  * function to highlight the points inside the buffer of a certain route, if the layer is activated in the layers control. 
  */
-mymap.on('overlayadd', function (eo) {
-
-	if (eo.name === 'none') {
+function HiglightingForCheckedLayersInLayerControl(layerName) {
+	if (layerName === 'none') {
 		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			highlight(pointsInsidePolygon);
 		}, 10);
 	}
-	if (eo.name === 'level 5') {
+	if (layerName === 'level 5') {
 		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
 			highlight(pointsInsidePolygon);
 		}, 10);
 	}
-	if (eo.name === 'level 4') {
+	if (layerName === 'level 4') {
 		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
 			highlight(pointsInsidePolygon);
 		}, 10);
 	}
-	if (eo.name === 'level 3') {
+	if (layerName === 'level 3') {
 		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
 			highlight(pointsInsidePolygon);
 		}, 10);
 	}
-});
+}
+
+// event if one layer is deactivated in the layers control 
+mymap.on('overlayremove ', function (eo) {
+
+	RemoveHighlightingForUncheckedLayersInLayerControl(eo.name);
+	var checkedLayers = layersControl.getOverlays(); // check if there are points which need to be highlighted again (needed because points often on same route) 
+
+	if (checkedLayers["none"] === true) {
+		HiglightingForCheckedLayersInLayerControl('none');
+	}
+	if (checkedLayers["level 5"] === true) {
+		HiglightingForCheckedLayersInLayerControl('level 5');
+	}
+	if (checkedLayers["level 4"] === true) {
+		HiglightingForCheckedLayersInLayerControl('level 4');
+	}
+	if (checkedLayers["level 3"] === true) {
+		HiglightingForCheckedLayersInLayerControl('level 3');
+	}
+}); 
 
 /**
  * function to remove the highlighting of the points inside the buffer of a certain route, if the layer is disabled in the layers control. 
  */
-mymap.on('overlayremove ', function (eo) {
-
-	if (eo.name === 'none') {
+function RemoveHighlightingForUncheckedLayersInLayerControl(layerName) {
+	if (layerName === 'none') {
 		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			removeHighlight(pointsInsidePolygon);
 		}, 10);
 	}
-	if (eo.name === 'level 5') {
+	if (layerName === 'level 5') {
 		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
 			removeHighlight(pointsInsidePolygon);
 		}, 10);
 	}
-	if (eo.name === 'level 4') {
+	if (layerName === 'level 4') {
 		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
 			removeHighlight(pointsInsidePolygon);
 		}, 10);
 	}
-	if (eo.name === 'level 3') {
+	if (layerName === 'level 3') {
 		setTimeout(function () {
 			let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
 			removeHighlight(pointsInsidePolygon);
 		}, 10);
 	}
-});
+}
 
 /**
  * function to calculate if a point is inside a polygon.
@@ -415,6 +444,29 @@ function removeHighlight(pointsInsidePolygon) {
 	})
 }
 
-
-
-
+/**
+ * function to recieve checked layers in layer control. 
+ * E.g. by control.getOverlays(); if the layer control is named "control"
+ */
+L.Control.Layers.include({
+	getOverlays: function() {
+	  // create hash to hold all layers
+	  var control, layers;
+	  layers = {};
+	  control = this;
+  
+	  // loop thru all layers in control
+	  control._layers.forEach(function(obj) {
+		var layerName;
+  
+		// check if layer is an overlay
+		if (obj.overlay) {
+		  // get name of overlay
+		  layerName = obj.name;
+		  // store whether it's present on the map or not
+		  return layers[layerName] = control._map.hasLayer(obj.layer);
+		}
+	  });
+	  return layers;
+	}
+  });
