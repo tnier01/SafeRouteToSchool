@@ -25,6 +25,7 @@ accidentMarkers = L.geoJSON(accidents, {
     onEachFeature: popup
 }).addTo(mymap);
 
+layersControl.addOverlay(accidentMarkers, "Accident Markers");
 
 var legend = L.control({position: 'bottomright'});
 

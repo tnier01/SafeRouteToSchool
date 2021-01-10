@@ -10,8 +10,8 @@
 
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
-	<link rel="stylesheet" href="/leaflet/leaflet.css"/>
-	<link rel="stylesheet" src="css/style.css"/>
+	<link rel="stylesheet" href="/leaflet/leaflet.css" />
+	<link rel="stylesheet" src="css/style.css" />
 
 	<script src="/leaflet/leaflet.js"></script>
 	<script src="/jquery/jquery.min.js"></script>
@@ -29,63 +29,52 @@
 
 	<div id="mapid" style="width: 1350px; height: 600px;"></div>
 	<div class="sidebar">
-        <!-- <button id="closeNav" class="navButton">&times;</button> -->
-        <div class="sidebar" id="ajaxLoad"></div>
-        <table>
-            <tr>
-                <td><span>Transport:</span></td>
-                <td>
-                    <input type="radio" class="transport" name="transport" value="driving-car"> Car
-                    <input type="radio" class="transport" name="transport" value="cycling-regular" checked> Bicycle
-                    <input type="radio" class="transport" name="transport" value="foot-walking"> Pedestrian
-                    <!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
-                </td>
+		<!-- <button id="closeNav" class="navButton">&times;</button> -->
+		<div class="sidebar" id="ajaxLoad"></div>
+		<table>
+			<tr>
+				<td><span>Transport:</span></td>
+				<td>
+					<input type="radio" class="transport" name="transport" value="driving-car"> Car
+					<input type="radio" class="transport" name="transport" value="cycling-regular" checked> Bicycle
+					<input type="radio" class="transport" name="transport" value="foot-walking"> Pedestrian
+					<!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
+				</td>
 			</tr>
 			<tr>
-                <td><span>Risk level to avoid:</span></td>
-                <td>
-                    <input type="radio" class="risk" name="risk" value="class5"> Level 5
-                    <input type="radio" class="risk" name="risk" value="class4" checked> Level 4
-					<input type="radio" class="risk" name="risk" value="class3"> Level 3
-					<input type="radio" class="risk" name="risk" value="none"> None
-                    <!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
-                </td>
-            </tr>
-            <tr>
-                <td><label for="start">Start:</label></td>
-                <td><input type="text" class="input" id="start" name="Start"></td>
-            </tr>
-            <tr>
-                <td><label for="finish">Finish:</label></td>
-                <td><input type="text" class="input" id="finish" name="Finish"></td>
-            </tr>
-            <tr>
-                <td><button id="submit" class="button">Submit</button></td>
-                <td></td>
-            </tr>
-        </table>
+				<td><label for="start">Start:</label></td>
+				<td><input type="text" class="input" id="start" name="Start"></td>
+			</tr>
+			<tr>
+				<td><label for="finish">Finish:</label></td>
+				<td><input type="text" class="input" id="finish" name="Finish"></td>
+			</tr>
+			<tr>
+				<td><button id="submit" class="button">Submit</button></td>
+				<td></td>
+			</tr>
+		</table>
 
-    </div>
+	</div>
 	<!-- <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
 	<script src="js/L.TileLayer.BetterWMS.js"></script>
-	
-	<script>
 
+	<script>
 		var mymap = L.map('mapid').setView([51.9606649, 7.6261347], 13);
 
-		L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-			maxZoom: 18,
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-				'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-			id: 'mapbox/streets-v11',
-			tileSize: 512,
-			zoomOffset: -1
+		var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+			maxZoom: 18
 		}).addTo(mymap);
 
-
+		var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+			maxZoom: 18
+		});
 	</script>
-	<script src="js/accidents.js"></script>
+
 	<script src="js/routing.js"></script>
+	<script src="js/accidents.js"></script>
 
 
 

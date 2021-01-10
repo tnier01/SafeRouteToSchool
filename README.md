@@ -48,3 +48,7 @@ npm start
 - contact to police (Tom) 
 - get densitsy map from QGIS, and write down procedure for final report (Mirjeta) 
 - statistics for accidents on route (Jan)
+
+#### possible new tasks 
+- suggestions for textual start and destination input (mentioned by Tom)
+- activate highlighting manually (mentioned by Nick)

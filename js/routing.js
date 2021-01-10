@@ -1,3 +1,9 @@
+var noneBuffered;
+var class5Buffered;
+var class4Buffered;
+var class3Buffered;
+var routeLayerSelectionActive = false;
+
 mymap.on('click', function (e) {
 	var container = L.DomUtil.create('div'),
 		startBtn = createButton('Start', container),
@@ -19,15 +25,29 @@ mymap.on('click', function (e) {
 	});
 });
 
-var routeLayer = new L.LayerGroup();
-routeLayer.addTo(mymap);
-var markerLayer = new L.LayerGroup();
-markerLayer.addTo(mymap);
+/*
+There is a layer for the risk area, and for each of the avoiding risk area routes. 
+In each of these routes, the polyline and the corresponding buffers and markers are stored. 
+Only the areaLayer, noneLayer are activated automatically, the other ones can be activated by the layercontrol. 
+*/
 var areaLayer = new L.LayerGroup();
 areaLayer.addTo(mymap);
+var noneLayer = new L.LayerGroup();
+noneLayer.addTo(mymap);
+var class5Layer = new L.LayerGroup();
+//class5Layer.addTo(mymap);
+var class4Layer = new L.LayerGroup();
+//class4Layer.addTo(mymap);
+var class3Layer = new L.LayerGroup();
+//class3Layer.addTo(mymap);
 
+var baseLayers = {
+	"OpenStreetMap": osmlayer,
+	"Esri World Imagery": Esri_WorldImagery
+};
 
-
+var layersControl = L.control.layers(baseLayers, null, { collapsed: false }).addTo(mymap);
+layersControl.addOverlay(areaLayer, "Risk Areas");
 
 function createButton(label, container, id) {
 	var btn = L.DomUtil.create('button', '', container);
@@ -76,159 +96,325 @@ addToMap(class5, areaLayer, "#800000")
 addToMap(class4, areaLayer, "#b30000")
 addToMap(class3, areaLayer, "#ff1a1a")
 addToMap(class2, areaLayer, "#ff8080")
+//addToMap(class1, areaLayer, "#ff8080")
 
-// submit the data to the openrouteservice api and precess results
+/**
+ * function to request the risk avoiding routes from OpenRouteService. 
+ * @param {*} profile 
+ * @param {*} data 
+ * @param {*} risk 
+ */
+function requestDatafromOpenRouteService(profile, data, risk) {
+	var route;
+
+	// if there is a certain risk which should be avoided, the avoid poylgons option is added to the request data 
+	if (risk !== "none") {
+		data.options = {
+			"avoid_polygons": eval(risk) // convert string to variable 
+		};
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "https://api.openrouteservice.org/v2/directions/" + profile + "/geojson",
+		async: false,
+		data: JSON.stringify(data),
+		contentType: "application/json; charset=utf-8",
+		headers: {
+			"Authorization": token.routing
+		},
+		success: function (response) {
+			route = response;
+		},
+		error: function (err) {
+			console.log(err);
+			$("#info").show();
+			$("#info").text(err.responseText);
+			$("#info").delay("10000").fadeOut();
+		}
+	});
+	return route;
+}
+
+/**
+ * function which is excecuted when the submit button is hit. 
+ * - start and destination are geocoded by the openrouteservie 
+ * - for each of the risk classes the corresponding route is recieved from openrouteservice 
+ * - each of the routes is added to the layer control 
+ * - by calling the function addRouteToMap, all routes and corresponding buffers and markers are added to the map
+ */
 $("#submit").click(function (e) {
-		let start = $("#start").val();
-        let finish = $("#finish").val();
-        let profile = $("input[name='transport']:checked").val();
-        let risk = $("input[name='risk']:checked").val();
+	let start = $("#start").val();
+	let finish = $("#finish").val();
+	let profile = $("input[name='transport']:checked").val();
 
+	if (start != "" && finish != "") {
+		var toCoordinates = function (coordString) {
+			let sep = coordString.split(",");
+			let lat = parseFloat(sep[0]);
+			let lng = parseFloat(sep[1]);
 
-		if (start != "" && finish != "") {
-			var toCoordinates = function (coordString) {
-				let sep = coordString.split(",");
-				let lat = parseFloat(sep[0]);
-				let lng = parseFloat(sep[1]);
+			return [lng, lat];
+		}
 
-				return [lng, lat];
-            }
-            
-
-			if (isNaN(start.split(",")[0])) {
-				$.ajax({
-					type: "GET",
-					url: "https://api.openrouteservice.org/geocode/search?api_key=" + token.routing + "&text=" + start,
-					async: false,
-					success: function (response) {
-						start = response.features[0].geometry.coordinates;
-					}
-				});
-			} else {
-				start = toCoordinates(start);
-			}
-			if (isNaN(finish.split(",")[0])) {
-				$.ajax({
-					type: "GET",
-					url: "https://api.openrouteservice.org/geocode/search?api_key=" + token.routing + "&text=" + finish,
-					async: false,
-					success: function (response) {
-						finish = response.features[0].geometry.coordinates;
-					}
-				});
-			} else {
-				finish = toCoordinates(finish);
-			}
-			if(risk !== "none") {
-				data = {
-					"coordinates": [
-						start, finish
-					],
-					"options": {
-                        "avoid_polygons": eval(risk)
-                    }
-				}
-				console.log(data);
-            }
-            else {
-				data = {
-					"coordinates": [
-						start, finish
-					]
-				}
-				console.log(data);
-			}
-
+		if (isNaN(start.split(",")[0])) {
 			$.ajax({
-				type: "POST",
-				url: "https://api.openrouteservice.org/v2/directions/" + profile + "/geojson",
-				data: JSON.stringify(data),
-				contentType: "application/json; charset=utf-8",
-				headers: {
-					"Authorization": token.routing 
-				},
+				type: "GET",
+				url: "https://api.openrouteservice.org/geocode/search?api_key=" + token.routing + "&text=" + start,
+				async: false,
 				success: function (response) {
-					console.log(response);
-					addRouteFeatures(response);
-				},
-				error: function (err) {
-					console.log(err);
-					// addRouteFeatures(response.responseText);
-					$("#info").show();
-					$("#info").text(err.responseText);
-					$("#info").delay("10000").fadeOut();
+					start = response.features[0].geometry.coordinates;
 				}
 			});
 		} else {
-			alert("please enter valid start and destination");
+			start = toCoordinates(start);
 		}
-	});
+		if (isNaN(finish.split(",")[0])) {
+			$.ajax({
+				type: "GET",
+				url: "https://api.openrouteservice.org/geocode/search?api_key=" + token.routing + "&text=" + finish,
+				async: false,
+				success: function (response) {
+					finish = response.features[0].geometry.coordinates;
+				}
+			});
+		} else {
+			finish = toCoordinates(finish);
+		}
 
-function proofPointsInPolygon(buffer){
+		data = {
+			"coordinates": [
+				start, finish
+			]
+		}
+
+		var routes = [];
+		routes.push(requestDatafromOpenRouteService(profile, data, "none"));
+		routes.push(requestDatafromOpenRouteService(profile, data, "class5"));
+		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
+		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
+
+		// if there is not already a layer selection for the routes, it is added 
+		if (routeLayerSelectionActive === false) {
+			routeLayerSelectionActive = true;
+
+			layersControl.addOverlay(noneLayer, "none");
+			layersControl.addOverlay(class5Layer, "level 5");
+			layersControl.addOverlay(class4Layer, "level 4");
+			layersControl.addOverlay(class3Layer, "level 3");
+		}
+
+		addRouteToMap(routes[0], "noneLayer");
+		addRouteToMap(routes[1], "class5Layer");
+		addRouteToMap(routes[2], "class4Layer");
+		addRouteToMap(routes[3], "class3Layer");
+
+		// set the map focus to the route which is not avoiding any risk areas 
+		let bbox = [
+			[routes[0].bbox[1], routes[0].bbox[0]],
+			[routes[0].bbox[3], routes[0].bbox[2]]
+		];
+		mymap.flyToBounds(bbox);
+
+
+	} else {
+		alert("please enter valid start and destination");
+	}
+});
+
+/**
+ * function to add the routes and the corresponding buffers and markers to the map. 
+ * The markers are added to the map by calling the function navigationInfo. 
+ * @param {*} route 
+ * @param {*} layer 
+ */
+function addRouteToMap(route, layer) {
+	console.log(route.features[0]);
+	if (layer === "noneLayer") {
+		noneLayer.clearLayers();
+
+		addToMap(route.features[0], noneLayer, "#00c800");
+
+		noneBuffered = turf.buffer(route, 50, { units: 'meters' });
+		addToMap(noneBuffered, noneLayer, "#00c804");
+
+		navigationInfo(route, layer);
+	}
+
+	if (layer === "class5Layer") {
+		class5Layer.clearLayers();
+		addToMap(route.features[0], class5Layer, "#00c800");
+
+		class5Buffered = turf.buffer(route, 50, { units: 'meters' });
+		addToMap(class5Buffered, class5Layer, "#00c804");
+
+		navigationInfo(route, layer);
+	}
+	if (layer === "class4Layer") {
+		class4Layer.clearLayers();
+		addToMap(route.features[0], class4Layer, "#00c800");
+
+		class4Buffered = turf.buffer(route, 50, { units: 'meters' });
+		addToMap(class4Buffered, class4Layer, "#00c804");
+
+		navigationInfo(route, layer);
+	}
+	if (layer === "class3Layer") {
+		class3Layer.clearLayers();
+		addToMap(route.features[0], class3Layer, "#00c800");
+
+		class3Buffered = turf.buffer(route, 50, { units: 'meters' });
+		addToMap(class3Buffered, class3Layer, "#00c804");
+
+		navigationInfo(route, layer);
+	}
+}
+
+/**
+ * function to add navigation information to the routes by corresponding markers and popups. 
+ * @param {*} route 
+ * @param {*} layer 
+ */
+function navigationInfo(route, layer) {
+
+	let marker;
+	let segments = route.features[0].properties.segments
+	var list = "";
+	var swapCoord = function (coord) {
+		return [coord[1], coord[0]];
+	};
+	segments[0].steps.forEach(element => {
+		let listObj = "<li class='listObj'>" + element.instruction + ": → " + element.distance + "m</li>";
+		list += listObj;
+
+		marker = L.marker(swapCoord(route.features[0].geometry.coordinates[element.way_points[0]]), {
+			"riseOnHover": true
+		});
+		let popupText = "<table><tr><td>Instruction:</td><td>" + element.instruction + "</td></tr><tr><td>Distance to next point:<td>" + element.distance + "m</td></tr></table>";
+		marker.bindPopup(popupText);
+
+		if (layer === "noneLayer") {
+			noneLayer.addLayer(marker);
+		}
+		if (layer === "class5Layer") {
+			class5Layer.addLayer(marker);
+		}
+		if (layer === "class4Layer") {
+			class4Layer.addLayer(marker);
+		}
+		if (layer === "class3Layer") {
+			class3Layer.addLayer(marker);
+		}
+
+	});
+	$("#navList").html(list);
+	$("#navigationInfo").show();
+}
+
+/**
+ * function to highlight the points inside the buffer of a certain route, if the layer is activated in the layers control. 
+ */
+mymap.on('overlayadd', function (eo) {
+
+	if (eo.name === 'none') {
+		setTimeout(function () {
+			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
+			highlight(pointsInsidePolygon);
+		}, 10);
+	}
+	if (eo.name === 'level 5') {
+		setTimeout(function () {
+			let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
+			highlight(pointsInsidePolygon);
+		}, 10);
+	}
+	if (eo.name === 'level 4') {
+		setTimeout(function () {
+			let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
+			highlight(pointsInsidePolygon);
+		}, 10);
+	}
+	if (eo.name === 'level 3') {
+		setTimeout(function () {
+			let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
+			highlight(pointsInsidePolygon);
+		}, 10);
+	}
+});
+
+/**
+ * function to remove the highlighting of the points inside the buffer of a certain route, if the layer is disabled in the layers control. 
+ */
+mymap.on('overlayremove ', function (eo) {
+
+	if (eo.name === 'none') {
+		setTimeout(function () {
+			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
+			removeHighlight(pointsInsidePolygon);
+		}, 10);
+	}
+	if (eo.name === 'level 5') {
+		setTimeout(function () {
+			let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
+			removeHighlight(pointsInsidePolygon);
+		}, 10);
+	}
+	if (eo.name === 'level 4') {
+		setTimeout(function () {
+			let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
+			removeHighlight(pointsInsidePolygon);
+		}, 10);
+	}
+	if (eo.name === 'level 3') {
+		setTimeout(function () {
+			let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
+			removeHighlight(pointsInsidePolygon);
+		}, 10);
+	}
+});
+
+/**
+ * function to calculate if a point is inside a polygon.
+ * @param {*} buffer 
+ */
+function proofPointsInPolygon(buffer) {
 	let pointsInsidePolygon = []
-	for (let point of accidents.features){
-		if(turf.booleanContains(buffer, point)){
+	for (let point of accidents.features) {
+		if (turf.booleanContains(buffer, point)) {
 			pointsInsidePolygon.push(point)
 		}
 	}
 	return pointsInsidePolygon;
 }
-// add route to map with instructions
-function addRouteFeatures(geojson) {
-	routeLayer.clearLayers();
-	removeHighlight();
-	addToMap(geojson.features[0], routeLayer, "#00c800");
-	var buffered = turf.buffer(geojson, 50, {units: 'meters'});
-	addToMap(buffered, routeLayer, "#00c804");
 
-	let pointsInsidePolygon = proofPointsInPolygon(buffered.features[0]);
-	highlight(pointsInsidePolygon)
-
-
-	markerLayer.clearLayers();
-	var addNavInfo = function (geojson) {
-		let segments = geojson.properties.segments
-		var list = "";
-		var swapCoord = function (coord) {
-			return [coord[1], coord[0]];
-		};
-		segments[0].steps.forEach(element => {
-			let listObj = "<li class='listObj'>" + element.instruction + ": → " + element.distance + "m</li>";
-			list += listObj;
-
-			let marker = L.marker(swapCoord(geojson.geometry.coordinates[element.way_points[0]]), {
-				"riseOnHover": true
-			});
-			let popupText = "<table><tr><td>Instruction:</td><td>" + element.instruction + "</td></tr><tr><td>Distance to next point:<td>" + element.distance + "m</td></tr></table>";
-			marker.bindPopup(popupText);
-			markerLayer.addLayer(marker);
-		});
-		$("#navList").html(list);
-		$("#navigationInfo").show();
-	};
-	addNavInfo(geojson.features[0]);
-
-	let bbox = [
-		[geojson.bbox[1], geojson.bbox[0]],
-		[geojson.bbox[3], geojson.bbox[2]]
-	];
-	mymap.flyToBounds(bbox);
-
-}
-
+/**
+ * function highlight a point of the accidentMarkers. 
+ * @param {*} pointsInsidePolygon 
+ */
 function highlight(pointsInsidePolygon) {
-    accidentMarkers.eachLayer(function (layer){
-		for (var point of pointsInsidePolygon){
-			if(layer.feature.properties.OBJECTID ==  point.properties.OBJECTID){
-				layer.setStyle({fillColor :'blue'});
+	accidentMarkers.eachLayer(function (layer) {
+		for (var point of pointsInsidePolygon) {
+			if (layer.feature.properties.OBJECTID == point.properties.OBJECTID) {
+				layer.setStyle({ fillColor: 'blue' });
 			}
 		}
 	})
-
 }
 
-function removeHighlight(){
-    accidentMarkers.eachLayer(function (layer){
+/**
+ * function to remove the highlight of a point of the accidentMarkers
+ * @param {*} pointsInsidePolygon 
+ */
+function removeHighlight(pointsInsidePolygon) {
+	accidentMarkers.eachLayer(function (layer) {
+		for (var point of pointsInsidePolygon) {
+			if (layer.feature.properties.OBJECTID == point.properties.OBJECTID) {
 				layer.setStyle(style(layer.feature));
+			}
+		}
 	})
 }
+
+
+
+
