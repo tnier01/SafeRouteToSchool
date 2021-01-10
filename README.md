@@ -52,3 +52,5 @@ npm start
 #### possible new tasks 
 - suggestions for textual start and destination input (mentioned by Tom)
 - activate highlighting manually (mentioned by Nick)
+- different colours for different routes (mentioned by Nick)
+- need for larger risk area calculation (mentioned by Tom)

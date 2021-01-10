@@ -127,7 +127,7 @@ function requestDatafromOpenRouteService(profile, data, risk) {
 			route = response;
 		},
 		error: function (err) {
-			console.log(err);
+			route = err;
 			$("#info").show();
 			$("#info").text(err.responseText);
 			$("#info").delay("10000").fadeOut();
@@ -193,21 +193,51 @@ $("#submit").click(function (e) {
 		routes.push(requestDatafromOpenRouteService(profile, data, "class5"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
-
+		
 		// if there is not already a layer selection for the routes, it is added 
-		if (routeLayerSelectionActive === false) {
-
+		var availableLayersInLayerControl = layersControl.getOverlaysNames();
+	
+		if (availableLayersInLayerControl.find(element => element === "none") === undefined) {
 			layersControl.addOverlay(noneLayer, "none");
+		}
+		if (availableLayersInLayerControl.find(element => element === "level 5") === undefined) {
 			layersControl.addOverlay(class5Layer, "level 5");
+		}
+		if (availableLayersInLayerControl.find(element => element === "level 4") === undefined) {
 			layersControl.addOverlay(class4Layer, "level 4");
+		}
+		if (availableLayersInLayerControl.find(element => element === "level 3") === undefined) {
 			layersControl.addOverlay(class3Layer, "level 3");
 		}
 
-		addRouteToMap(routes[0], "noneLayer");
-		addRouteToMap(routes[1], "class5Layer");
-		addRouteToMap(routes[2], "class4Layer");
-		addRouteToMap(routes[3], "class3Layer");
+		
+		// if there is no route available, it is not added to the map and is not available in the layer control 
+		if (routes[0].statusText === undefined) {
+			addRouteToMap(routes[0], "noneLayer");
+		}
+		else {
+			layersControl.removeLayer(noneLayer);
 
+		}
+		if (routes[1].statusText === undefined) {
+			addRouteToMap(routes[1], "class5Layer");
+		}
+		else {
+			layersControl.removeLayer(class5Layer);
+		}
+		if (routes[2].statusText === undefined) {
+			addRouteToMap(routes[2], "class4Layer");
+		}
+		else {
+			layersControl.removeLayer(class4Layer);
+		}
+		if (routes[3].statusText === undefined) {
+			addRouteToMap(routes[3], "class3Layer");
+		}
+		else {
+			layersControl.removeLayer(class3Layer);
+		}
+		
 		// set the map focus to the route which is not avoiding any risk areas 
 		let bbox = [
 			[routes[0].bbox[1], routes[0].bbox[0]],
@@ -228,7 +258,7 @@ $("#submit").click(function (e) {
  * @param {*} layer 
  */
 function addRouteToMap(route, layer) {
-	console.log(route.features[0]);
+
 	if (layer === "noneLayer") {
 		noneLayer.clearLayers();
 
@@ -320,27 +350,27 @@ function navigationInfo(route, layer) {
 // event if one layer is activated in the layers control 
 mymap.on('overlayadd', function (eo) {
 	HiglightingForCheckedLayersInLayerControl(eo.name);
-}); 
+});
 
 /**
  * function to highlight the points inside the buffer of a certain route, if the layer is activated in the layers control. 
  */
 function HiglightingForCheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
-			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
-			highlight(pointsInsidePolygon);
+		let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
+		highlight(pointsInsidePolygon);
 	}
 	if (layerName === 'level 5') {
-			let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
-			highlight(pointsInsidePolygon);
+		let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
+		highlight(pointsInsidePolygon);
 	}
 	if (layerName === 'level 4') {
-			let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
-			highlight(pointsInsidePolygon);
+		let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
+		highlight(pointsInsidePolygon);
 	}
 	if (layerName === 'level 3') {
-			let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
-			highlight(pointsInsidePolygon);
+		let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
+		highlight(pointsInsidePolygon);
 	}
 }
 
@@ -362,27 +392,27 @@ mymap.on('overlayremove ', function (eo) {
 	if (checkedLayers["level 3"] === true) {
 		HiglightingForCheckedLayersInLayerControl('level 3');
 	}
-}); 
+});
 
 /**
  * function to remove the highlighting of the points inside the buffer of a certain route, if the layer is disabled in the layers control. 
  */
 function RemoveHighlightingForUncheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
-			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
-			removeHighlight(pointsInsidePolygon);
+		let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
+		removeHighlight(pointsInsidePolygon);
 	}
 	if (layerName === 'level 5') {
-			let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
-			removeHighlight(pointsInsidePolygon);
+		let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
+		removeHighlight(pointsInsidePolygon);
 	}
 	if (layerName === 'level 4') {
-			let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
-			removeHighlight(pointsInsidePolygon);
+		let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
+		removeHighlight(pointsInsidePolygon);
 	}
 	if (layerName === 'level 3') {
-			let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
-			removeHighlight(pointsInsidePolygon);
+		let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
+		removeHighlight(pointsInsidePolygon);
 	}
 }
 
@@ -433,24 +463,51 @@ function removeHighlight(pointsInsidePolygon) {
  * E.g. by control.getOverlays(); if the layer control is named "control"
  */
 L.Control.Layers.include({
-	getOverlays: function() {
-	  // create hash to hold all layers
-	  var control, layers;
-	  layers = {};
-	  control = this;
-  
-	  // loop thru all layers in control
-	  control._layers.forEach(function(obj) {
-		var layerName;
-  
-		// check if layer is an overlay
-		if (obj.overlay) {
-		  // get name of overlay
-		  layerName = obj.name;
-		  // store whether it's present on the map or not
-		  return layers[layerName] = control._map.hasLayer(obj.layer);
-		}
-	  });
-	  return layers;
+	getOverlays: function () {
+		// create hash to hold all layers
+		var control, layers;
+		layers = {};
+		control = this;
+
+		// loop thru all layers in control
+		control._layers.forEach(function (obj) {
+			var layerName;
+
+			// check if layer is an overlay
+			if (obj.overlay) {
+				// get name of overlay
+				layerName = obj.name;
+				// store whether it's present on the map or not
+				return layers[layerName] = control._map.hasLayer(obj.layer);
+			}
+		});
+		return layers;
 	}
-  });
+});
+
+/**
+ * function to recieve checkable layers in layer control. 
+ * E.g. by control.getOverlaysNames(); if the layer control is named "control"
+ */
+L.Control.Layers.include({
+	getOverlaysNames: function () {
+		// create hash to hold all layers
+		var control, layers;
+		layers = [];
+		control = this;
+
+		// loop thru all layers in control
+		control._layers.forEach(function (obj) {
+			var layerName;
+
+			// check if layer is an overlay
+			if (obj.overlay) {
+				// get name of overlay
+				layerName = obj.name;
+				// store whether it's present on the map or not
+				return layers.push(layerName);
+			}
+		});
+		return layers;
+	}
+});
