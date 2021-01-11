@@ -41,16 +41,15 @@ npm start
 7. Go to the application under https://localhost:3000
 
 #### next tasks 
-- layer selection for different basis layers (e.g. OpenStreetMap, satellite image), put on/ off density map, put on/ off accident points (Aysel)
-- showing the intital route and highlight the accidents on the route (Nick)
-- showing different routes at the same time (especially the intital route and one further route which is avoiding accidents) (Tom) 
-- responsible design, good looking settings for the route search (Aysel) 
-- contact to police (Tom) 
-- get densitsy map from QGIS, and write down procedure for final report (Mirjeta) 
-- statistics for accidents on route (Jan)
+- responsible design, basis for dashboard design (Aysel) 
+- further statistics inculding person and type, adapt it to the routes shown on map (Jan)
+- update Server (Nick)
+- suggestions for textual start and destination input (Tom)
+- different colours for different routes (Tom)
+- problem if the start is inside a risk area (Tom)
+- get densitsy map from QGIS, write down procedure for final report (about 5 classes, geojson format) (Mirjeta) 
+
 
 #### possible new tasks 
-- suggestions for textual start and destination input (mentioned by Tom)
-- activate highlighting manually (mentioned by Nick)
-- different colours for different routes (mentioned by Nick)
-- need for larger risk area calculation (mentioned by Tom)
+- limit the map extent to münster (mentioned by Tom)
+  
