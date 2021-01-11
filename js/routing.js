@@ -171,7 +171,11 @@ function proofPointsInPolygon(buffer){
 			pointsInsidePolygon.push(point)
 		}
 	}
-	return pointsInsidePolygon;
+	var geojsonObject = {
+		'type': 'FeatureCollection',
+		'features': pointsInsidePolygon
+	  };
+	return geojsonObject;
 }
 // add route to map with instructions
 function addRouteFeatures(geojson) {
@@ -218,7 +222,7 @@ function addRouteFeatures(geojson) {
 
 function highlight(pointsInsidePolygon) {
     accidentMarkers.eachLayer(function (layer){
-		for (var point of pointsInsidePolygon){
+		for (var point of pointsInsidePolygon.features){
 			if(layer.feature.properties.OBJECTID ==  point.properties.OBJECTID){
 				layer.setStyle({fillColor :'blue'});
 			}
