@@ -15,7 +15,19 @@ function style(feature) {
 }
 
 function popup(feature, layer) {
-    layer.bindPopup("time: " + feature.properties.USTUNDE + " h")
+
+    let bike;
+    if (feature.properties.IstRad == 1) {
+        bike = true
+    } else {
+        bike = false
+    }
+
+    layer.bindPopup(
+        "<b>Time: </b>" + feature.properties.USTUNDE + " h <br>" +
+        "<b>Month: </b>" + feature.properties.UMONAT + "<br>" +
+        "<b>Bicycle involved: </b>" + bike
+    )
 }
 
 accidentMarkers = L.geoJSON(accidents, {
