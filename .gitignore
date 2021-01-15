@@ -24,7 +24,7 @@ hs_err_pid*
 
 .idea/
 node_modules/
-private/
+tokens.js
 package-lock.json
 
 api/config.yml

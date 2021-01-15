@@ -17,6 +17,11 @@
 	<script src="jquery/jquery.min.js"></script>
 	<script src="chart.js/chart.js"></script>
 
+	<script src="/jquery/jquery.min.js"></script>
+	<script src="/turf/turf.min.js"></script>
+	<script src="/private/tokens.js"></script>
+	<script src="data/desnsityAreas.js"></script>
+	<script src="/js/createPolygons.js"></script>
 	<script src="data/accidents.js"></script>
 
 
@@ -27,6 +32,45 @@
 
 	<div id="mapid" style="width: 1350px; height: 600px;"></div>
 
+	<div class="sidebar">
+        <!-- <button id="closeNav" class="navButton">&times;</button> -->
+        <div class="sidebar" id="ajaxLoad"></div>
+        <table>
+            <tr>
+                <td><span>Transport:</span></td>
+                <td>
+                    <input type="radio" class="transport" name="transport" value="driving-car"> Car
+                    <input type="radio" class="transport" name="transport" value="cycling-regular" checked> Bicycle
+                    <input type="radio" class="transport" name="transport" value="foot-walking"> Pedestrian
+                    <!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
+                </td>
+			</tr>
+			<tr>
+                <td><span>Risk level to avoid:</span></td>
+                <td>
+                    <input type="radio" class="risk" name="risk" value="class5"> Level 5
+                    <input type="radio" class="risk" name="risk" value="class4" checked> Level 4
+					<input type="radio" class="risk" name="risk" value="class3"> Level 3
+					<input type="radio" class="risk" name="risk" value="none"> None
+                    <!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
+                </td>
+            </tr>
+            <tr>
+                <td><label for="start">Start:</label></td>
+                <td><input type="text" class="input" id="start" name="Start"></td>
+            </tr>
+            <tr>
+                <td><label for="finish">Finish:</label></td>
+                <td><input type="text" class="input" id="finish" name="Finish"></td>
+            </tr>
+            <tr>
+                <td><button id="submit" class="button">Submit</button></td>
+                <td></td>
+            </tr>
+        </table>
+
+    </div>
+
 	<div class="chart-container" style="position: relative; height:50vh; width:50vw">
 		<canvas id="weekdays"></canvas>
 		<canvas id="category"></canvas>
@@ -35,6 +79,9 @@
 		<canvas id="participants"></canvas>
 		<canvas id="time"></canvas>
 	</div>
+	<!-- <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
+	<script src="js/L.TileLayer.BetterWMS.js"></script>
+
 	<script>
 
 		var mymap = L.map('mapid').setView([51.9606649, 7.6261347], 13);
@@ -50,8 +97,10 @@
 
 
 	</script>
+	<script src="js/accidents.js"></script>
+	<script src="js/routing.js"></script>
 
-<script src="js/accidents.js"></script>
+
 
 
 </body>

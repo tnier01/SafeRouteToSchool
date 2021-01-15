@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "server_start": "nodejs server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/tnier01/SafeRouteToSchool#readme",
   "dependencies": {
     "chart.js": "^2.9.4",
+    "@turf/turf": "^5.1.6",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
     "leaflet": "^1.7.1"

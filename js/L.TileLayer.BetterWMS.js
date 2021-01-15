@@ -28,7 +28,7 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
         showResults(error);  
       }
     });
-  },
+  }, 
   
   getFeatureInfoUrl: function (latlng) {
     // Construct a GetFeatureInfo request URL given a point
