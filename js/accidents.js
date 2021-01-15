@@ -315,7 +315,7 @@ function createChart(geojson) {
     });
 }
 
-createChart(accidents);
+//createChart(accidents);
 
 
 

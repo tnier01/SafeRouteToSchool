@@ -186,7 +186,8 @@ function addRouteFeatures(geojson) {
 	addToMap(buffered, routeLayer, "#00c804");
 
 	let pointsInsidePolygon = proofPointsInPolygon(buffered.features[0]);
-	highlight(pointsInsidePolygon)
+	highlight(pointsInsidePolygon);
+	createChart(pointsInsidePolygon);
 
 
 	markerLayer.clearLayers();
