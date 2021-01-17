@@ -41,15 +41,16 @@ npm start
 7. Go to the application under https://localhost:3000
 
 #### next tasks 
-- responsible design, basis for dashboard design (Aysel) 
-- further statistics inculding person and type, adapt it to the routes shown on map (Jan)
+- responsive design, basis for dashboard design (Nick) 
 - update Server (Nick)
-- suggestions for textual start and destination input (Tom)
+- suggestions for textual start and destination input (Mirjeta)
+- statistics concerning the routes should only be shown if the routes are choosen (Tom)
 - different colours for different routes (Tom)
 - problem if the start is inside a risk area (Tom)
-- get densitsy map from QGIS, write down procedure for final report (about 5 classes, geojson format) (Mirjeta) 
-
+- get densitsy map from QGIS, write down procedure for final report (about 5 classes, geojson format) (Mirjeta)
+- something like an explanation or legend (especially for staistics) (Jan)
 
 #### possible new tasks 
-- limit the map extent to münster (mentioned by Tom)
-  
+- limit the map extent to münster 
+- add data for other years 
+- make a video of the application 

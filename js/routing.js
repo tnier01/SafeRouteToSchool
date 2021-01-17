@@ -251,6 +251,11 @@ $("#submit").click(function (e) {
 	}
 });
 
+//addToMap(class5, areaLayer, "#800000")
+//addToMap(class4, areaLayer, "#b30000")
+//addToMap(class3, areaLayer, "#ff1a1a")
+//addToMap(class2, areaLayer, "#ff8080")
+
 /**
  * function to add the routes and the corresponding buffers and markers to the map. 
  * The markers are added to the map by calling the function navigationInfo. 
@@ -262,7 +267,7 @@ function addRouteToMap(route, layer) {
 	if (layer === "noneLayer") {
 		noneLayer.clearLayers();
 
-		addToMap(route.features[0], noneLayer, "#00c800");
+		addToMap(route.features[0], noneLayer, "#0B0B61");
 
 		noneBuffered = turf.buffer(route, 50, { units: 'meters' });
 		addToMap(noneBuffered, noneLayer, "#00c804");
@@ -274,12 +279,13 @@ function addRouteToMap(route, layer) {
 			routeLayerSelectionActive = true;
 			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			highlight(pointsInsidePolygon);
+			createChart(pointsInsidePolygon);
 		}
 	}
 
 	if (layer === "class5Layer") {
 		class5Layer.clearLayers();
-		addToMap(route.features[0], class5Layer, "#00c800");
+		addToMap(route.features[0], class5Layer, "#58FAF4");
 
 		class5Buffered = turf.buffer(route, 50, { units: 'meters' });
 		addToMap(class5Buffered, class5Layer, "#00c804");
@@ -288,7 +294,7 @@ function addRouteToMap(route, layer) {
 	}
 	if (layer === "class4Layer") {
 		class4Layer.clearLayers();
-		addToMap(route.features[0], class4Layer, "#00c800");
+		addToMap(route.features[0], class4Layer, "#6A0888");
 
 		class4Buffered = turf.buffer(route, 50, { units: 'meters' });
 		addToMap(class4Buffered, class4Layer, "#00c804");
@@ -297,46 +303,14 @@ function addRouteToMap(route, layer) {
 	}
 	if (layer === "class3Layer") {
 		class3Layer.clearLayers();
-		addToMap(route.features[0], class3Layer, "#00c800");
+		addToMap(route.features[0], class3Layer, "#DF0174");
 
 		class3Buffered = turf.buffer(route, 50, { units: 'meters' });
 		addToMap(class3Buffered, class3Layer, "#00c804");
 
 		navigationInfo(route, layer);
 	}
-<<<<<<< HEAD
 }
-=======
-	var geojsonObject = {
-		'type': 'FeatureCollection',
-		'features': pointsInsidePolygon
-	  };
-	return geojsonObject;
-}
-// add route to map with instructions
-function addRouteFeatures(geojson) {
-	routeLayer.clearLayers();
-	removeHighlight();
-	addToMap(geojson.features[0], routeLayer, "#00c800");
-	var buffered = turf.buffer(geojson, 50, {units: 'meters'});
-	addToMap(buffered, routeLayer, "#00c804");
-
-	let pointsInsidePolygon = proofPointsInPolygon(buffered.features[0]);
-	highlight(pointsInsidePolygon);
-	createChart(pointsInsidePolygon);
-
-
-	markerLayer.clearLayers();
-	var addNavInfo = function (geojson) {
-		let segments = geojson.properties.segments
-		var list = "";
-		var swapCoord = function (coord) {
-			return [coord[1], coord[0]];
-		};
-		segments[0].steps.forEach(element => {
-			let listObj = "<li class='listObj'>" + element.instruction + ": → " + element.distance + "m</li>";
-			list += listObj;
->>>>>>> main
 
 /**
  * function to add navigation information to the routes by corresponding markers and popups. 
@@ -391,18 +365,26 @@ function HiglightingForCheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
 		let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 		highlight(pointsInsidePolygon);
+		createChart(pointsInsidePolygon);
+
 	}
 	if (layerName === 'level 5') {
 		let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
 		highlight(pointsInsidePolygon);
+		createChart(pointsInsidePolygon);
+
 	}
 	if (layerName === 'level 4') {
 		let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
 		highlight(pointsInsidePolygon);
+		createChart(pointsInsidePolygon);
+
 	}
 	if (layerName === 'level 3') {
 		let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
 		highlight(pointsInsidePolygon);
+		createChart(pointsInsidePolygon);
+
 	}
 }
 
@@ -471,17 +453,10 @@ function proofPointsInPolygon(buffer) {
  * @param {*} pointsInsidePolygon 
  */
 function highlight(pointsInsidePolygon) {
-<<<<<<< HEAD
-	accidentMarkers.eachLayer(function (layer) {
-		for (var point of pointsInsidePolygon) {
-			if (layer.feature.properties.OBJECTID == point.properties.OBJECTID) {
-				layer.setStyle({ fillColor: 'blue' });
-=======
     accidentMarkers.eachLayer(function (layer){
 		for (var point of pointsInsidePolygon.features){
 			if(layer.feature.properties.OBJECTID ==  point.properties.OBJECTID){
 				layer.setStyle({fillColor :'blue'});
->>>>>>> main
 			}
 		}
 	})
@@ -493,7 +468,7 @@ function highlight(pointsInsidePolygon) {
  */
 function removeHighlight(pointsInsidePolygon) {
 	accidentMarkers.eachLayer(function (layer) {
-		for (var point of pointsInsidePolygon) {
+		for (var point of pointsInsidePolygon.features) {
 			if (layer.feature.properties.OBJECTID == point.properties.OBJECTID) {
 				layer.setStyle(style(layer.feature));
 			}
