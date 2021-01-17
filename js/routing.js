@@ -304,7 +304,39 @@ function addRouteToMap(route, layer) {
 
 		navigationInfo(route, layer);
 	}
+<<<<<<< HEAD
 }
+=======
+	var geojsonObject = {
+		'type': 'FeatureCollection',
+		'features': pointsInsidePolygon
+	  };
+	return geojsonObject;
+}
+// add route to map with instructions
+function addRouteFeatures(geojson) {
+	routeLayer.clearLayers();
+	removeHighlight();
+	addToMap(geojson.features[0], routeLayer, "#00c800");
+	var buffered = turf.buffer(geojson, 50, {units: 'meters'});
+	addToMap(buffered, routeLayer, "#00c804");
+
+	let pointsInsidePolygon = proofPointsInPolygon(buffered.features[0]);
+	highlight(pointsInsidePolygon);
+	createChart(pointsInsidePolygon);
+
+
+	markerLayer.clearLayers();
+	var addNavInfo = function (geojson) {
+		let segments = geojson.properties.segments
+		var list = "";
+		var swapCoord = function (coord) {
+			return [coord[1], coord[0]];
+		};
+		segments[0].steps.forEach(element => {
+			let listObj = "<li class='listObj'>" + element.instruction + ": → " + element.distance + "m</li>";
+			list += listObj;
+>>>>>>> main
 
 /**
  * function to add navigation information to the routes by corresponding markers and popups. 
@@ -427,7 +459,11 @@ function proofPointsInPolygon(buffer) {
 			pointsInsidePolygon.push(point)
 		}
 	}
-	return pointsInsidePolygon;
+	var geojsonObject = {
+		'type': 'FeatureCollection',
+		'features': pointsInsidePolygon
+	  };
+	return geojsonObject;
 }
 
 /**
@@ -435,10 +471,17 @@ function proofPointsInPolygon(buffer) {
  * @param {*} pointsInsidePolygon 
  */
 function highlight(pointsInsidePolygon) {
+<<<<<<< HEAD
 	accidentMarkers.eachLayer(function (layer) {
 		for (var point of pointsInsidePolygon) {
 			if (layer.feature.properties.OBJECTID == point.properties.OBJECTID) {
 				layer.setStyle({ fillColor: 'blue' });
+=======
+    accidentMarkers.eachLayer(function (layer){
+		for (var point of pointsInsidePolygon.features){
+			if(layer.feature.properties.OBJECTID ==  point.properties.OBJECTID){
+				layer.setStyle({fillColor :'blue'});
+>>>>>>> main
 			}
 		}
 	})
