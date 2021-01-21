@@ -4,4 +4,4 @@
 https://unfallatlas.statistikportal.de/
 
 
-c5.geojson contains the heatmap at level 5 meanwhile c6.geojson is a little more detailed 
+polygons.geojson contains the density polygons with 5 classes
