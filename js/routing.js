@@ -52,7 +52,7 @@ layersControl.addOverlay(areaLayer, "Risk Areas");
 function createButton(label, container, id) {
 	var btn = L.DomUtil.create('button', '', container);
 	btn.setAttribute('type', 'button');
-	btn.setAttribute('class', 'button')
+	btn.setAttribute('class', 'btn btn-primary')
 	btn.setAttribute('id', id)
 	btn.innerHTML = label;
 	return btn;

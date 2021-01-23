@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+	
 <head>
 
 	<title>Map of Münster</title>
@@ -13,15 +13,26 @@
 	<link rel="stylesheet" href="/leaflet/leaflet.css" />
 	<link rel="stylesheet" src="css/style.css" />
 
+
 	<script src="/leaflet/leaflet.js"></script>
 	<script src="jquery/jquery.min.js"></script>
 	<script src="chart.js/chart.js"></script>
+	
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+	
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="/leaflet/leaflet.js"></script>
+
+	<script src="chart.js/chart.js"></script>
+	
 
 	<script src="/jquery/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
 	<script src="/turf/turf.min.js"></script>
 	<script src="/private/tokens.js"></script>
 	<script src="data/desnsityAreas.js"></script>
 	<script src="/js/createPolygons.js"></script>
+	<script src="/js/autocomplete.js"></script>
 	<script src="data/accidents.js"></script>
 
 
@@ -30,43 +41,81 @@
 
 <body>
 
-	<div id="mapid" style="width: 1350px; height: 600px;"></div>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<a class="navbar-brand" href="#">Safe route</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbar">
+			<div class="navbar-nav">
+			  <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+			  <a class="nav-item nav-link" href="#">How-To</a>
+			  <a class="nav-item nav-link" href="#">Impressum</a>
+			</div>
+		  </div>
+	  </nav>
 
-	<div class="sidebar">
-		<!-- <button id="closeNav" class="navButton">&times;</button> -->
-		<div class="sidebar" id="ajaxLoad"></div>
-		<table>
-			<tr>
-				<td><span>Transport:</span></td>
-				<td>
-					<input type="radio" class="transport" name="transport" value="driving-car"> Car
-					<input type="radio" class="transport" name="transport" value="cycling-regular" checked> Bicycle
-					<input type="radio" class="transport" name="transport" value="foot-walking"> Pedestrian
-					<!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
-				</td>
-			</tr>
-			<tr>
-				<td><label for="start">Start:</label></td>
-				<td><input type="text" class="input" id="start" name="Start"></td>
-			</tr>
-			<tr>
-				<td><label for="finish">Finish:</label></td>
-				<td><input type="text" class="input" id="finish" name="Finish"></td>
-			</tr>
-			<tr>
-				<td><button id="submit" class="button">Submit</button></td>
-				<td></td>
-			</tr>
-		</table>
+	  <div class="row">
+		<div class="col-md-9">
+			<div class="sidebar">
+				<!-- <button id="closeNav" class="navButton">&times;</button> -->
+				<div class="sidebar" id="ajaxLoad"></div>
+				<table>
+					<tr>
+						<td><span>Transport:</span></td>
+						<td>
+							<input type="radio" class="transport" name="transport" value="driving-car"> Car
+							<input type="radio" class="transport" name="transport" value="cycling-regular" checked> Bicycle
+							<input type="radio" class="transport" name="transport" value="foot-walking"> Pedestrian
+							<!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
+						</td>
+					</tr>
+					<tr>
+						<td><label for="start">Start:</label></td>
+						<td><input type="text" class="form-control autoComplete input" id="start" name="Start"></td>
+					</tr>
+					<tr>
+						<td><label for="finish">Finish:</label></td>
+						<td><input type="text" class="form-control autoComplete input" id="finish" name="Finish"></td>
+					</tr>
+					<tr>
+						<td><button type="button" class="btn btn-primary" id="submit" >Submit</button></td>
+						<td></td>
+					</tr>
+				</table>
+		
+			</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-3">
+		  
+		</div>
+	  </div>
+	  <div class="row">
+		<div class="col-xs-4 col-md-2">
+			<div class="chart-container" style="position: relative; width: 100%; height: 600px;">
+				<canvas id="weekdays" height = 300px></canvas>
+				<canvas id="category" height = 300px></canvas>
+			  </div>
+		</div>
+		<div class="col-xs-4 col-md-8">
+			<div id="mapid" style="width: 100%; height: 600px;"></div>
+		</div>
+		<div class="col-xs-4 col-md-2">
+			<div class="chart-container" style="position: relative; width: 100%; height: 600px;">
+				<canvas id="light" height = 300px></canvas>
+				<canvas id="type" height = 300px></canvas>
+			  </div>
+		</div>
+	  </div>
 
-	</div>
-    </div>
+
+
+
+
 
 	<div class="chart-container" style="position: relative; height:50vh; width:50vw">
-		<canvas id="weekdays"></canvas>
-		<canvas id="category"></canvas>
-		<canvas id="light"></canvas>
-		<canvas id="type"></canvas>
+
 		<canvas id="participants"></canvas>
 		<canvas id="time"></canvas>
 	</div>
