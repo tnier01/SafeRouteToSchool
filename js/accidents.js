@@ -40,38 +40,7 @@ accidentMarkers = L.geoJSON(accidents, {
 
 layersControl.addOverlay(accidentMarkers, "Accident Markers");
 
-var legend = L.control({position: 'bottomright'});
-
-legend.onAdd = function (map) {
-
-    var div = L.DomUtil.create("div", "legend");
-    div.innerHTML += "<h4>Risk levels</h4>";
-    div.innerHTML += '<i style="background: #800000"></i><span>Level 5</span><br>';
-    div.innerHTML += '<i style="background: #b30000""></i><span>Level 4</span><br>';
-    div.innerHTML += '<i style="background: #ff1a1a"></i><span>Level 3</span><br>';
-    div.innerHTML += '<i style="background: #ff8080"></i><span>Level 2</span><br>';
-    //div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
-
-    return div;
-};
-
-legend.addTo(mymap);
-
-mymap.on('overlayremove', function (eventLayer) {
-    if (eventLayer.name === 'Risk Areas') {
-        this.removeControl(legend);
-    } else {
-
-    }
-});
-
-mymap.on('overlayadd', function (eventLayer) {
-    if (eventLayer.name === 'Risk Areas') {
-        this.addControl(legend);
-    } else {
-
-    }
-});
+accidentMarkers.bringToFront();
 
 /*
 
