@@ -156,6 +156,13 @@ $("#submit").click(function (e) {
 		RemoveHighlightingForUncheckedLayersInLayerControl('level 5')
 	}
 
+	// needed to initialize each of the layer
+	noneBuffered = undefined;
+	class5Buffered = undefined;
+	class4Buffered = undefined;
+	class3Buffered = undefined;
+	routeLayerSelectionActive = false;
+
 	if (start != "" && finish != "") {
 		var toCoordinates = function (coordString) {
 			let sep = coordString.split(",");
