@@ -225,6 +225,15 @@ $("#submit").click(function (e) {
 			layersControl.addOverlay(class3Layer, "level 3");
 		}
 
+		// if all routes are the same, only the none route is shown 
+		if (routes[0].statusText === undefined && routes[1].statusText === undefined && routes[2].statusText === undefined && routes[3].statusText === undefined) {
+			if ((JSON.stringify(routes[0].features[0].geometry.coordinates) == JSON.stringify(routes[3].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[1].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[2].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[3].features[0].geometry.coordinates))) {
+				console.log("Yeah");
+				layersControl.removeLayer(class5Layer);
+				layersControl.removeLayer(class4Layer);
+				layersControl.removeLayer(class3Layer);
+			}
+		}
 
 		// if there is no route available, it is not added to the map and is not available in the layer control 
 		if (routes[0].statusText === undefined) {
