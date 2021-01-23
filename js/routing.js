@@ -27,7 +27,7 @@ mymap.on('click', function (e) {
 
 /*
 There is a layer for the risk area, and for each of the avoiding risk area routes. 
-In each of these routes, the polyline and the corresponding buffers and markers are stored. 
+In each of these routes, the polyline and the corresponding buffers (are commented out, as they are only used for calculation and should not be displayed) and markers are stored. 
 Only the areaLayer, noneLayer are activated automatically, the other ones can be activated by the layercontrol. 
 */
 var areaLayer = new L.LayerGroup();
@@ -148,6 +148,14 @@ $("#submit").click(function (e) {
 	let finish = $("#finish").val();
 	let profile = $("input[name='transport']:checked").val();
 
+	// delete all highlighting, so that there is no intital highlighting if the transportation type is changed 
+	if (noneBuffered !== undefined) {
+		RemoveHighlightingForUncheckedLayersInLayerControl('none')
+		RemoveHighlightingForUncheckedLayersInLayerControl('level 3')
+		RemoveHighlightingForUncheckedLayersInLayerControl('level 4')
+		RemoveHighlightingForUncheckedLayersInLayerControl('level 5')
+	}
+
 	if (start != "" && finish != "") {
 		var toCoordinates = function (coordString) {
 			let sep = coordString.split(",");
@@ -193,10 +201,10 @@ $("#submit").click(function (e) {
 		routes.push(requestDatafromOpenRouteService(profile, data, "class5"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
-		
+
 		// if there is not already a layer selection for the routes, it is added 
 		var availableLayersInLayerControl = layersControl.getOverlaysNames();
-	
+
 		if (availableLayersInLayerControl.find(element => element === "none") === undefined) {
 			layersControl.addOverlay(noneLayer, "none");
 		}
@@ -210,7 +218,7 @@ $("#submit").click(function (e) {
 			layersControl.addOverlay(class3Layer, "level 3");
 		}
 
-		
+
 		// if there is no route available, it is not added to the map and is not available in the layer control 
 		if (routes[0].statusText === undefined) {
 			addRouteToMap(routes[0], "noneLayer");
@@ -237,7 +245,7 @@ $("#submit").click(function (e) {
 		else {
 			layersControl.removeLayer(class3Layer);
 		}
-		
+
 		// set the map focus to the route which is not avoiding any risk areas 
 		let bbox = [
 			[routes[0].bbox[1], routes[0].bbox[0]],
@@ -270,7 +278,7 @@ function addRouteToMap(route, layer) {
 		addToMap(route.features[0], noneLayer, "#0B0B61");
 
 		noneBuffered = turf.buffer(route, 50, { units: 'meters' });
-		addToMap(noneBuffered, noneLayer, "#00c804");
+		//addToMap(noneBuffered, noneLayer, "#00c804");
 
 		navigationInfo(route, layer);
 
@@ -288,7 +296,7 @@ function addRouteToMap(route, layer) {
 		addToMap(route.features[0], class5Layer, "#58FAF4");
 
 		class5Buffered = turf.buffer(route, 50, { units: 'meters' });
-		addToMap(class5Buffered, class5Layer, "#00c804");
+		//addToMap(class5Buffered, class5Layer, "#00c804");
 
 		navigationInfo(route, layer);
 	}
@@ -297,7 +305,7 @@ function addRouteToMap(route, layer) {
 		addToMap(route.features[0], class4Layer, "#6A0888");
 
 		class4Buffered = turf.buffer(route, 50, { units: 'meters' });
-		addToMap(class4Buffered, class4Layer, "#00c804");
+		//addToMap(class4Buffered, class4Layer, "#00c804");
 
 		navigationInfo(route, layer);
 	}
@@ -306,7 +314,7 @@ function addRouteToMap(route, layer) {
 		addToMap(route.features[0], class3Layer, "#DF0174");
 
 		class3Buffered = turf.buffer(route, 50, { units: 'meters' });
-		addToMap(class3Buffered, class3Layer, "#00c804");
+		//addToMap(class3Buffered, class3Layer, "#00c804");
 
 		navigationInfo(route, layer);
 	}
@@ -444,7 +452,7 @@ function proofPointsInPolygon(buffer) {
 	var geojsonObject = {
 		'type': 'FeatureCollection',
 		'features': pointsInsidePolygon
-	  };
+	};
 	return geojsonObject;
 }
 
@@ -453,10 +461,10 @@ function proofPointsInPolygon(buffer) {
  * @param {*} pointsInsidePolygon 
  */
 function highlight(pointsInsidePolygon) {
-    accidentMarkers.eachLayer(function (layer){
-		for (var point of pointsInsidePolygon.features){
-			if(layer.feature.properties.OBJECTID ==  point.properties.OBJECTID){
-				layer.setStyle({fillColor :'blue'});
+	accidentMarkers.eachLayer(function (layer) {
+		for (var point of pointsInsidePolygon.features) {
+			if (layer.feature.properties.OBJECTID == point.properties.OBJECTID) {
+				layer.setStyle({ fillColor: 'blue' });
 			}
 		}
 	})
