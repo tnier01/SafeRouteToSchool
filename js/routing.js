@@ -236,8 +236,11 @@ $("#submit").click(function (e) {
 			if ((JSON.stringify(routes[0].features[0].geometry.coordinates) == JSON.stringify(routes[3].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[1].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[2].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[3].features[0].geometry.coordinates))) {
 				console.log("Yeah");
 				layersControl.removeLayer(class5Layer);
+				mymap.removeLayer(class5Layer);
 				layersControl.removeLayer(class4Layer);
+				mymap.removeLayer(class4Layer);
 				layersControl.removeLayer(class3Layer);
+				mymap.removeLayer(class3Layer);
 			}
 		}
 
