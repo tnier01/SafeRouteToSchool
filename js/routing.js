@@ -35,11 +35,11 @@ areaLayer.addTo(mymap);
 var noneLayer = new L.LayerGroup();
 noneLayer.addTo(mymap);
 var class5Layer = new L.LayerGroup();
-//class5Layer.addTo(mymap);
+//class5Layer.addTo(mymap); commented out as it is later added to map
 var class4Layer = new L.LayerGroup();
-//class4Layer.addTo(mymap);
+//class4Layer.addTo(mymap); commented out as it is later added to map
 var class3Layer = new L.LayerGroup();
-//class3Layer.addTo(mymap);
+//class3Layer.addTo(mymap); commented out as it is later added to map
 
 var baseLayers = {
 	"OpenStreetMap": osmlayer,
@@ -151,8 +151,14 @@ $("#submit").click(function (e) {
 	// delete all highlighting, so that there is no intital highlighting if the transportation type is changed 
 	if (noneBuffered !== undefined) {
 		RemoveHighlightingForUncheckedLayersInLayerControl('none')
+	}
+	if (class3Buffered !== undefined) {
 		RemoveHighlightingForUncheckedLayersInLayerControl('level 3')
+	}
+	if (class4Buffered !== undefined) {
 		RemoveHighlightingForUncheckedLayersInLayerControl('level 4')
+	}
+	if (class5Buffered !== undefined) {
 		RemoveHighlightingForUncheckedLayersInLayerControl('level 5')
 	}
 
@@ -241,7 +247,6 @@ $("#submit").click(function (e) {
 		}
 		else {
 			layersControl.removeLayer(noneLayer);
-
 		}
 		if (routes[1].statusText === undefined) {
 			addRouteToMap(routes[1], "class5Layer");
@@ -298,8 +303,9 @@ function addRouteToMap(route, layer) {
 
 		navigationInfo(route, layer);
 
+		var checkedLayers = layersControl.getOverlays();  
 		// the noneLayer is shown initially, thats why the highlighting is not activated as usually by the user (function mymap.on('overlayadd', function (eo))
-		if (routeLayerSelectionActive === false) {
+		if (routeLayerSelectionActive === false && checkedLayers["none"] === true) {
 			routeLayerSelectionActive = true;
 			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			highlight(pointsInsidePolygon);

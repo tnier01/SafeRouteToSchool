@@ -44,9 +44,9 @@ npm start
 - responsive design, basis for dashboard design (Nick) 
 - update Server (Nick)
 - suggestions for textual start and destination input (Mirjeta)
-- statistics concerning the routes should only be shown if the routes are choosen (Tom)
+- statistics concerning the routes should only be shown if the routes are choosen (Tom: show statistics independently from selection in layercontrol)
 - different colours for different routes (Tom)
-- problem if the start is inside a risk area (Tom)
+- problem if the start is inside a risk area (Tom: how do we want to solve it? (added: if all routes are the same, only the none route is shown))
 - get densitsy map from QGIS, write down procedure for final report (about 5 classes, geojson format) (Mirjeta)
 - something like an explanation or legend (especially for staistics) (Jan)
 
@@ -54,3 +54,5 @@ npm start
 - limit the map extent to münster 
 - add data for other years 
 - make a video of the application 
+- make the different levels better distinguishable in the map (Tom)
+- loadingbar (Tom)
