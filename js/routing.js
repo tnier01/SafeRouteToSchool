@@ -55,10 +55,10 @@ legend_risk.onAdd = function (map) {
 
 	var div = L.DomUtil.create("div", "legend");
 	div.innerHTML += "<h4>Risk levels</h4>";
-	div.innerHTML += '<i style="background: #800000"></i><span>Level 5</span><br>';
-	div.innerHTML += '<i style="background: #b30000""></i><span>Level 4</span><br>';
-	div.innerHTML += '<i style="background: #ff1a1a"></i><span>Level 3</span><br>';
-	div.innerHTML += '<i style="background: #ff8080"></i><span>Level 2</span><br>';
+	div.innerHTML += '<i style="background: #690000"></i><span>Level 5</span><br>';
+	div.innerHTML += '<i style="background: #e22b00""></i><span>Level 4</span><br>';
+	div.innerHTML += '<i style="background: #ffbc48"></i><span>Level 3</span><br>';
+	//div.innerHTML += '<i style="background: #ff8080"></i><span>Level 2</span><br>';
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
 	return div;
@@ -73,6 +73,8 @@ legend_routes.onAdd = function (map) {
 	var div = L.DomUtil.create("div", "legend l_routes");
 	div.innerHTML += "<h4>Routes </h4>";
 	div.innerHTML += "<span>(avoided risk level)</span><br>";
+
+	var color;
 
 	if(mymap.hasLayer(noneLayer)) {
 		div.innerHTML += '<i style="background: #0B0B61"></i><span>None</span><br>';
@@ -125,11 +127,40 @@ function createButton(label, container, id) {
 	return btn;
 }
 
-function addToMap(geojson, LayerGroup, color) {
+var stripes_5 = new L.StripePattern({
+	width: 30,
+	height: 8,
+	angle: 90,
+	color: '#690000'
+});
+stripes_5.addTo(mymap);
+
+var stripes_4 = new L.StripePattern({
+	width: 3,
+	height: 12,
+	angle: 45,
+	color: '#b30000'
+});
+stripes_4.addTo(mymap);
+
+var stripes_3 = new L.StripePattern({
+	width: 3,
+	height: 15,
+	//angle: 30,
+	color: '#ff5f64',
+	dashArray: '8 12'
+});
+stripes_3.addTo(mymap);
+
+function addToMap(geojson, LayerGroup, color, pattern) {
 	//LayerGroup.clearLayers();
 	let geometry = L.geoJson(geojson, {
-		"color": color
-	});
+		"color": color,
+		fillOpacity: 0.6,
+		stroke: false,
+		//dashArray: '8 12',
+		fillPattern: pattern
+	})
 	LayerGroup.addLayer(geometry);
 }
 
@@ -159,10 +190,22 @@ function setAddress(pos, selector) {
 	});
 }
 
-addToMap(class5, areaLayer, "#800000")
+/*
+addToMap(class5, areaLayer, "#690000", stripes_5)
+addToMap(class4, areaLayer, "#b30000", stripes_4)
+addToMap(class3, areaLayer, "#ff5f64", stripes_3)
+*/
+
+/*addToMap(class5, areaLayer, "#690000")
 addToMap(class4, areaLayer, "#b30000")
-addToMap(class3, areaLayer, "#ff1a1a")
-addToMap(class2, areaLayer, "#ff8080")
+addToMap(class3, areaLayer, "#ff5f64")*/
+
+addToMap(class5, areaLayer, "#690000")
+addToMap(class4, areaLayer, "#e22b00")
+addToMap(class3, areaLayer, "#ffbc48")
+
+
+// addToMap(class2, areaLayer, "#ff8080")
 //addToMap(class1, areaLayer, "#ff8080")
 
 /**
