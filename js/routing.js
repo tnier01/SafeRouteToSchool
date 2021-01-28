@@ -27,7 +27,7 @@ mymap.on('click', function (e) {
 
 /*
 There is a layer for the risk area, and for each of the avoiding risk area routes. 
-In each of these routes, the polyline and the corresponding buffers and markers are stored. 
+In each of these routes, the polyline and the corresponding buffers (are commented out, as they are only used for calculation and should not be displayed) and markers are stored. 
 Only the areaLayer, noneLayer are activated automatically, the other ones can be activated by the layercontrol. 
 */
 var areaLayer = new L.LayerGroup();
@@ -35,11 +35,11 @@ areaLayer.addTo(mymap);
 var noneLayer = new L.LayerGroup();
 noneLayer.addTo(mymap);
 var class5Layer = new L.LayerGroup();
-//class5Layer.addTo(mymap);
+//class5Layer.addTo(mymap); commented out as it is later added to map
 var class4Layer = new L.LayerGroup();
-//class4Layer.addTo(mymap);
+//class4Layer.addTo(mymap); commented out as it is later added to map
 var class3Layer = new L.LayerGroup();
-//class3Layer.addTo(mymap);
+//class3Layer.addTo(mymap); commented out as it is later added to map
 
 var baseLayers = {
 	"OpenStreetMap": osmlayer,
@@ -181,6 +181,27 @@ $("#submit").click(function (e) {
 	let finish = $("#finish").val();
 	let profile = $("input[name='transport']:checked").val();
 
+	// delete all highlighting, so that there is no intital highlighting if the transportation type is changed 
+	if (noneBuffered !== undefined) {
+		RemoveHighlightingForUncheckedLayersInLayerControl('none')
+	}
+	if (class3Buffered !== undefined) {
+		RemoveHighlightingForUncheckedLayersInLayerControl('level 3')
+	}
+	if (class4Buffered !== undefined) {
+		RemoveHighlightingForUncheckedLayersInLayerControl('level 4')
+	}
+	if (class5Buffered !== undefined) {
+		RemoveHighlightingForUncheckedLayersInLayerControl('level 5')
+	}
+
+	// needed to initialize each of the layer
+	noneBuffered = undefined;
+	class5Buffered = undefined;
+	class4Buffered = undefined;
+	class3Buffered = undefined;
+	routeLayerSelectionActive = false;
+
 	if (start != "" && finish != "") {
 		var toCoordinates = function (coordString) {
 			let sep = coordString.split(",");
@@ -226,10 +247,10 @@ $("#submit").click(function (e) {
 		routes.push(requestDatafromOpenRouteService(profile, data, "class5"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
-		
+
 		// if there is not already a layer selection for the routes, it is added 
 		var availableLayersInLayerControl = layersControl.getOverlaysNames();
-	
+
 		if (availableLayersInLayerControl.find(element => element === "none") === undefined) {
 			layersControl.addOverlay(noneLayer, "none");
 		}
@@ -243,14 +264,25 @@ $("#submit").click(function (e) {
 			layersControl.addOverlay(class3Layer, "level 3");
 		}
 
-		
+		// if all routes are the same, only the none route is shown 
+		if (routes[0].statusText === undefined && routes[1].statusText === undefined && routes[2].statusText === undefined && routes[3].statusText === undefined) {
+			if ((JSON.stringify(routes[0].features[0].geometry.coordinates) == JSON.stringify(routes[3].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[1].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[2].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[3].features[0].geometry.coordinates))) {
+				console.log("Yeah");
+				layersControl.removeLayer(class5Layer);
+				mymap.removeLayer(class5Layer);
+				layersControl.removeLayer(class4Layer);
+				mymap.removeLayer(class4Layer);
+				layersControl.removeLayer(class3Layer);
+				mymap.removeLayer(class3Layer);
+			}
+		}
+
 		// if there is no route available, it is not added to the map and is not available in the layer control 
 		if (routes[0].statusText === undefined) {
 			addRouteToMap(routes[0], "noneLayer");
 		}
 		else {
 			layersControl.removeLayer(noneLayer);
-
 		}
 		if (routes[1].statusText === undefined) {
 			addRouteToMap(routes[1], "class5Layer");
@@ -270,7 +302,7 @@ $("#submit").click(function (e) {
 		else {
 			layersControl.removeLayer(class3Layer);
 		}
-		
+
 		// set the map focus to the route which is not avoiding any risk areas 
 		let bbox = [
 			[routes[0].bbox[1], routes[0].bbox[0]],
@@ -303,12 +335,13 @@ function addRouteToMap(route, layer) {
 		addToMap(route.features[0], noneLayer, "#0B0B61");
 
 		noneBuffered = turf.buffer(route, 50, { units: 'meters' });
-		addToMap(noneBuffered, noneLayer, "#00c804");
+		//addToMap(noneBuffered, noneLayer, "#00c804");
 
 		navigationInfo(route, layer);
 
+		var checkedLayers = layersControl.getOverlays();  
 		// the noneLayer is shown initially, thats why the highlighting is not activated as usually by the user (function mymap.on('overlayadd', function (eo))
-		if (routeLayerSelectionActive === false) {
+		if (routeLayerSelectionActive === false && checkedLayers["none"] === true) {
 			routeLayerSelectionActive = true;
 			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			highlight(pointsInsidePolygon);
@@ -321,7 +354,7 @@ function addRouteToMap(route, layer) {
 		addToMap(route.features[0], class5Layer, "#58FAF4");
 
 		class5Buffered = turf.buffer(route, 50, { units: 'meters' });
-		addToMap(class5Buffered, class5Layer, "#00c804");
+		//addToMap(class5Buffered, class5Layer, "#00c804");
 
 		navigationInfo(route, layer);
 	}
@@ -330,7 +363,7 @@ function addRouteToMap(route, layer) {
 		addToMap(route.features[0], class4Layer, "#6A0888");
 
 		class4Buffered = turf.buffer(route, 50, { units: 'meters' });
-		addToMap(class4Buffered, class4Layer, "#00c804");
+		//addToMap(class4Buffered, class4Layer, "#00c804");
 
 		navigationInfo(route, layer);
 	}
@@ -339,7 +372,7 @@ function addRouteToMap(route, layer) {
 		addToMap(route.features[0], class3Layer, "#DF0174");
 
 		class3Buffered = turf.buffer(route, 50, { units: 'meters' });
-		addToMap(class3Buffered, class3Layer, "#00c804");
+		//addToMap(class3Buffered, class3Layer, "#00c804");
 
 		navigationInfo(route, layer);
 	}
@@ -477,7 +510,7 @@ function proofPointsInPolygon(buffer) {
 	var geojsonObject = {
 		'type': 'FeatureCollection',
 		'features': pointsInsidePolygon
-	  };
+	};
 	return geojsonObject;
 }
 
@@ -486,10 +519,10 @@ function proofPointsInPolygon(buffer) {
  * @param {*} pointsInsidePolygon 
  */
 function highlight(pointsInsidePolygon) {
-    accidentMarkers.eachLayer(function (layer){
-		for (var point of pointsInsidePolygon.features){
-			if(layer.feature.properties.OBJECTID ==  point.properties.OBJECTID){
-				layer.setStyle({fillColor :'blue'});
+	accidentMarkers.eachLayer(function (layer) {
+		for (var point of pointsInsidePolygon.features) {
+			if (layer.feature.properties.OBJECTID == point.properties.OBJECTID) {
+				layer.setStyle({ fillColor: 'blue' });
 			}
 		}
 	})
