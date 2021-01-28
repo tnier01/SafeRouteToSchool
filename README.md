@@ -52,6 +52,9 @@ npm start
 - insert the new density map in our application and proof if it works (Mirjeta)
 - limit the map extent to Münster (Mirjeta) 
 
+#### topics
+- route instructions (especially relative big markers) neccessary?
+
 #### possible new tasks 
 - fit the names of the routes in the route selection to make them unambiguous 
 - add data for other years 
