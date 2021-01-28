@@ -66,19 +66,53 @@ legend_risk.onAdd = function (map) {
 
 legend_risk.addTo(mymap);
 
+var legend_routes = L.control({position: 'bottomright'});
+
+legend_routes.onAdd = function (map) {
+
+	var div = L.DomUtil.create("div", "legend l_routes");
+	div.innerHTML += "<h4>Routes </h4>";
+	div.innerHTML += "<span>(avoided risk level)</span><br>";
+
+	if(mymap.hasLayer(noneLayer)) {
+		div.innerHTML += '<i style="background: #0B0B61"></i><span>None</span><br>';
+	}
+	if(mymap.hasLayer(class5Layer)) {
+		div.innerHTML += '<i style="background: #58FAF4""></i><span>Level 5</span><br>';
+	}
+	if(mymap.hasLayer(class4Layer)) {
+		div.innerHTML += '<i style="background: #6A0888"></i><span>Level 4</span><br>';
+	}
+	if(mymap.hasLayer(class3Layer)) {
+		div.innerHTML += '<i style="background: #DF0174"></i><span>Level 3</span><br>';
+	}
+	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
+
+	return div;
+};
+
+
 mymap.on('overlayremove', function (eventLayer) {
 	if (eventLayer.name === 'Risk Areas') {
 		this.removeControl(legend_risk);
-	} else {
-
+	}
+	if (eventLayer.name === 'none' || eventLayer.name === 'level 5' || eventLayer.name === 'level 4' || eventLayer.name === 'level 3') {
+		this.removeControl(legend_routes);
+		this.addControl(legend_routes);
+		if (!mymap.hasLayer(class3Layer) && !mymap.hasLayer(class4Layer) && !mymap.hasLayer(class5Layer) && !mymap.hasLayer(noneLayer)) {
+			this.removeControl(legend_routes);
+		}
 	}
 });
 
 mymap.on('overlayadd', function (eventLayer) {
 	if (eventLayer.name === 'Risk Areas') {
 		this.addControl(legend_risk);
-	} else {
-
+		accidentMarkers.bringToFront();
+	}
+	if (eventLayer.name === 'none' || eventLayer.name === 'level 5' || eventLayer.name === 'level 4' || eventLayer.name === 'level 3') {
+		this.removeControl(legend_routes);
+		this.addControl(legend_routes);
 	}
 });
 
@@ -310,6 +344,7 @@ $("#submit").click(function (e) {
 		];
 		mymap.flyToBounds(bbox);
 
+		legend_routes.addTo(mymap);
 
 	} else {
 		alert("please enter valid start and destination");
