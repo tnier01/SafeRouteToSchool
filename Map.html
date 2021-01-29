@@ -11,7 +11,10 @@
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
 	<link rel="stylesheet" href="/leaflet/leaflet.css" />
-	<link rel="stylesheet" type="text/css" href="/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+
+	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+		integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
 	<script src="/leaflet/leaflet.js"></script>
 	<script src="jquery/jquery.min.js"></script>
@@ -29,38 +32,42 @@
 </head>
 
 <body>
+	<div id="map">
+		<div id="leafletMap"></div>
 
-	<div id="mapid" style="width: 1350px; height: 600px;"></div>
+		<div id="route">
+			<button id="routeButton" class="btn" onclick="toggle_visibility('routeSelection', 'routeButton');"><i
+					class="fas fa-route"></i></button>
 
-	<div class="sidebar">
-		<!-- <button id="closeNav" class="navButton">&times;</button> -->
-		<div class="sidebar" id="ajaxLoad"></div>
-		<table>
-			<tr>
-				<td><span>Transport:</span></td>
-				<td>
-					<input type="radio" class="transport" name="transport" value="driving-car"> Car
-					<input type="radio" class="transport" name="transport" value="cycling-regular" checked> Bicycle
-					<input type="radio" class="transport" name="transport" value="foot-walking"> Pedestrian
-					<!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
-				</td>
-			</tr>
-			<tr>
-				<td><label for="start">Start:</label></td>
-				<td><input type="text" class="input" id="start" name="Start"></td>
-			</tr>
-			<tr>
-				<td><label for="finish">Finish:</label></td>
-				<td><input type="text" class="input" id="finish" name="Finish"></td>
-			</tr>
-			<tr>
-				<td><button id="submit" class="button">Submit</button></td>
-				<td></td>
-			</tr>
-		</table>
-
+			<div id="routeSelection" class="sidebar" style="visibility: visible;">
+				<div class="sidebar" id="ajaxLoad"></div>
+				<table>
+					<tr>
+						<td><span>Transport:</span></td>
+						<td>
+							<input type="radio" class="transport" name="transport" value="driving-car"> Car
+							<input type="radio" class="transport" name="transport" value="cycling-regular" checked>
+							Bicycle
+							<input type="radio" class="transport" name="transport" value="foot-walking"> Pedestrian
+							<!-- <input type="radio" class="transport" name="transport" value="wheelchair"> Wheelchair -->
+						</td>
+					</tr>
+					<tr>
+						<td><label for="start">Start:</label></td>
+						<td><input type="text" class="input" id="start" name="Start" style="width: 100%;"></td>
+					</tr>
+					<tr>
+						<td><label for="finish">Finish:</label></td>
+						<td><input type="text" class="input" id="finish" name="Finish" style="width: 100%;"></td>
+					</tr>
+					<tr>
+						<td><button id="submit" class="button">Submit</button></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+		</div>
 	</div>
-    </div>
 
 	<div class="chart-container" style="position: relative; height:50vh; width:50vw">
 		<canvas id="weekdays"></canvas>
@@ -71,15 +78,17 @@
 		<canvas id="time"></canvas>
 	</div>
 
-
 	<div class="explanations">
 		<div id="statistics_legend">
 			<h4>Explanation of statistics</h4>
 			All data were taken from the <a href="https://unfallatlas.statistikportal.de">German Accident Atlas</a>.
 			The shown data is from 2019.
-			<br>FAQs and explanations of accident participants and the heaviest accident result regarding injuries can be found here:
-			<a href="https://unfallatlas.statistikportal.de/_info2020.html">German Accident Atlas | explanatory notes</a>
-			<br> Data of previous years can be found here: <a href="https://unfallatlas.statistikportal.de/_opendata2020.html">German Accident Atlas | OpenData</a>.
+			<br>FAQs and explanations of accident participants and the heaviest accident result regarding injuries can
+			be found here:
+			<a href="https://unfallatlas.statistikportal.de/_info2020.html">German Accident Atlas | explanatory
+				notes</a>
+			<br> Data of previous years can be found here: <a
+				href="https://unfallatlas.statistikportal.de/_opendata2020.html">German Accident Atlas | OpenData</a>.
 			As well as additional information within the downloadable PDF containing the Metadata.
 		</div>
 		<div id="risk_legend">
@@ -87,17 +96,19 @@
 			<p>
 				The risk levels were derived from the accidents. Therefore a density map with 5 levels was created.
 				That means, level 1 has the lowest density of accidents and level 5 the highest density.
-				With this level 5 routes avoid areas where the most accidents happened, while level 3 routes already avoid
+				With this level 5 routes avoid areas where the most accidents happened, while level 3 routes already
+				avoid
 				areas with fewer accidents. The possibility to avoid level 1 or 2 is not given, because with this you
 				could drive almost nowhere.
 			</p>
 		</div>
 	</div>
+
 	<!-- <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
 	<script src="js/L.TileLayer.BetterWMS.js"></script>
 
 	<script>
-		var mymap = L.map('mapid').setView([51.9606649, 7.6261347], 13);
+		var mymap = L.map('leafletMap').setView([51.9606649, 7.6261347], 13);
 
 		var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',

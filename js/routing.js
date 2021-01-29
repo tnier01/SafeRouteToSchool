@@ -595,3 +595,19 @@ L.Control.Layers.include({
 		return layers;
 	}
 });
+
+/**
+ * function to hide an html div and chane position of corresponding button 
+ * @param {} id 
+ */
+function toggle_visibility(divId, buttonId) {
+	visibility = document.getElementById(divId).style.visibility; 
+	if (visibility === "hidden") {
+		document.getElementById(divId).style.visibility = 'visible'; 
+		document.getElementById(buttonId).style.bottom = '0px';
+	}
+	else {
+		document.getElementById(divId).style.visibility = 'hidden'; 
+		document.getElementById(buttonId).style.bottom = '-114.5px';
+	}
+}

@@ -59,6 +59,7 @@ npm start
 - fit the names of the routes in the route selection to make them unambiguous 
 - add data for other years 
 - make a video of the application 
+- change style of legends to styling of leaflet? 
 
 
 
