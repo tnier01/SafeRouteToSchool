@@ -39,7 +39,10 @@ accidentMarkers = L.geoJSON(accidents, {
 
 layersControl.addOverlay(accidentMarkers, "Accident Markers");
 
-var legend = L.control({position: 'bottomright'});
+chartW= []
+chartC= []
+chartT= []
+chartL= []
 
 /*
 legend.onAdd = function (map) {
@@ -194,10 +197,22 @@ function createChart(geojson, number) {
 
     console.log(dataTime);
 
+    
+
+    if(chartW[number] !== undefined){
+        console.log("redraw")
+        chartW[number].destroy()
+        chartC[number].destroy()
+        chartT[number].destroy()
+        chartL[number].destroy()
+    }
+
 
     let ctw = document.getElementById('weekdays' +number).getContext('2d');
 
-    let chartW = new Chart(ctw, {
+
+
+    chartW[number] = new Chart(ctw, {
         type: 'bar',
         data: dataWeekdays,
         options: {
@@ -219,7 +234,7 @@ function createChart(geojson, number) {
 
     let ctc = document.getElementById('category'+number).getContext('2d');
 
-    let chartC = new Chart(ctc, {
+    chartC[number] = new Chart(ctc, {
         type: 'bar',
         data: dataCategory,
         options: {
@@ -241,7 +256,7 @@ function createChart(geojson, number) {
 
     let ctl = document.getElementById('light'+number).getContext('2d');
 
-    let chartL = new Chart(ctl, {
+    chartL[number] = new Chart(ctl, {
         type: 'bar',
         data: dataLight,
         options: {
@@ -263,7 +278,7 @@ function createChart(geojson, number) {
 
     let ctt = document.getElementById('type'+number).getContext('2d');
 
-    let chartT = new Chart(ctt, {
+    chartT[number] = new Chart(ctt, {
         type: 'bar',
         data: dataType,
         options: {

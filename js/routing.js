@@ -271,7 +271,7 @@ $("#submit").click(function (e) {
 		];
 		mymap.flyToBounds(bbox);
 
-		$('#none').tab('show');
+		$('#none').tab("show");
 
 
 	} else {
@@ -389,22 +389,22 @@ mymap.on('overlayadd', function (eo) {
 function HiglightingForCheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
 		highlight(nonePointsInsidePolygon);
-		$('#none').tab('show');
+		$('#none').tab("show");
 
 	}
 	if (layerName === 'level 5') {
 		highlight(class5PointsInsidePolygon);
-		$('#level5').tab('show');
+		$('#level5').tab("show");
 
 	}
 	if (layerName === 'level 4') {
 		highlight(class4PointsInsidePolygon);
-		$('#level4').trigger('click')
+		$('#level4').tab("show");
 
 	}
 	if (layerName === 'level 3') {
 		highlight(class3PointsInsidePolygon);
-		$('#level3').trigger('click')
+		$('#level3').tab("show");
 
 	}
 }
