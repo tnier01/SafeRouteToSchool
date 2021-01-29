@@ -21,6 +21,12 @@ app.use("/private", express.static(__dirname + '/private'))
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/Map.html')
 })
+app.get('/howto', (req, res) => {
+    res.sendFile(__dirname + '/HowTo.html')
+})
+app.get('/impressum', (req, res) => {
+    res.sendFile(__dirname + '/Impressum.html')
+})
 
 const port = 3000;
 

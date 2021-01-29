@@ -1,12 +1,13 @@
 function getColor(p) {
     return p.IstRad == 1 ? '#ff1200':
+        //p.IstFuss == 1 ? '#3c0e99':
         '#ff7800';
 }
 
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties),
-        radius: 8,
+        fillColor: '#ff1200', //getColor(feature.properties),
+        radius: 5,
         color: "#000",
         weight: 1,
         opacity: 1,
@@ -44,28 +45,8 @@ chartC= []
 chartT= []
 chartL= []
 
-/*
-legend.onAdd = function (map) {
 
-    var div = L.DomUtil.create('div', 'info legend');
-    labels = ['<strong>Involved</strong>'],
-        categories = ['Bicycle', 'Other'];
-        colors = ['#ff1200', '#ff7800'];
-
-    for (var i = 0; i < categories.length; i++) {
-
-        div.innerHTML +=
-            labels.push(
-                '<i class="circle" style="fillcolor:' + colors[i] + '"></i> ' +
-                (categories[i] ? categories[i] : '+'));
-
-    }
-    div.innerHTML = labels.join('<br>');
-    return div;
-};
-
-legend.addTo(mymap);
-*/
+accidentMarkers.bringToFront();
 
 /*
 
