@@ -122,7 +122,7 @@ function updateObj(arr) {
     return stats;
 }
 
-function createChart(geojson) {
+function createChart(geojson, number) {
 
     let obj = updateObj(geojson);
 
@@ -195,7 +195,7 @@ function createChart(geojson) {
     console.log(dataTime);
 
 
-    let ctw = document.getElementById('weekdays').getContext('2d');
+    let ctw = document.getElementById('weekdays' +number).getContext('2d');
 
     let chartW = new Chart(ctw, {
         type: 'bar',
@@ -217,7 +217,7 @@ function createChart(geojson) {
         }
     });
 
-    let ctc = document.getElementById('category').getContext('2d');
+    let ctc = document.getElementById('category'+number).getContext('2d');
 
     let chartC = new Chart(ctc, {
         type: 'bar',
@@ -239,7 +239,7 @@ function createChart(geojson) {
         }
     });
 
-    let ctl = document.getElementById('light').getContext('2d');
+    let ctl = document.getElementById('light'+number).getContext('2d');
 
     let chartL = new Chart(ctl, {
         type: 'bar',
@@ -261,7 +261,7 @@ function createChart(geojson) {
         }
     });
 
-    let ctt = document.getElementById('type').getContext('2d');
+    let ctt = document.getElementById('type'+number).getContext('2d');
 
     let chartT = new Chart(ctt, {
         type: 'bar',
@@ -283,6 +283,8 @@ function createChart(geojson) {
         }
     });
 
+
+    /** 
     let ctp = document.getElementById('participants').getContext('2d');
 
     let chartP = new Chart(ctp, {
@@ -325,8 +327,9 @@ function createChart(geojson) {
                 fontSize: 20
             }
         }
-    });
+    });*/
 }
+
 
 //createChart(accidents);
 

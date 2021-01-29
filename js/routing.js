@@ -2,6 +2,10 @@ var noneBuffered;
 var class5Buffered;
 var class4Buffered;
 var class3Buffered;
+var nonePointsInsidePolygon;
+var class5PointsInsidePolygon;
+var class4PointsInsidePolygon;
+var class3PointsInsidePolygon;
 var routeLayerSelectionActive = false;
 
 mymap.on('click', function (e) {
@@ -148,6 +152,8 @@ $("#submit").click(function (e) {
 	let finish = $("#finish").val();
 	let profile = $("input[name='transport']:checked").val();
 
+	removeHighlight(accidents)
+
 	if (start != "" && finish != "") {
 		var toCoordinates = function (coordString) {
 			let sep = coordString.split(",");
@@ -213,29 +219,49 @@ $("#submit").click(function (e) {
 		
 		// if there is no route available, it is not added to the map and is not available in the layer control 
 		if (routes[0].statusText === undefined) {
+			noneBuffered = turf.buffer(routes[0], 50, { units: 'meters' });
+			nonePointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			addRouteToMap(routes[0], "noneLayer");
+			createChart(nonePointsInsidePolygon, 0)
+			show("none")
 		}
 		else {
 			layersControl.removeLayer(noneLayer);
-
+			hide("none")
 		}
 		if (routes[1].statusText === undefined) {
+			class5Buffered = turf.buffer(routes[1], 50, { units: 'meters' });
+			class5PointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
 			addRouteToMap(routes[1], "class5Layer");
+			createChart(class5PointsInsidePolygon,5)
+			show("level5")
 		}
 		else {
 			layersControl.removeLayer(class5Layer);
+			hide("level5")
 		}
 		if (routes[2].statusText === undefined) {
+			
+			class4Buffered = turf.buffer(routes[2], 50, { units: 'meters' });
+			class4PointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
+			createChart(class4PointsInsidePolygon,4)
 			addRouteToMap(routes[2], "class4Layer");
+			show("level4")
 		}
 		else {
 			layersControl.removeLayer(class4Layer);
+			hide("level4")
 		}
 		if (routes[3].statusText === undefined) {
+			class3Buffered = turf.buffer(routes[3], 50, { units: 'meters' });
+			class3PointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
+			createChart(class3PointsInsidePolygon,3)
 			addRouteToMap(routes[3], "class3Layer");
+			show("level3")
 		}
 		else {
 			layersControl.removeLayer(class3Layer);
+			hide("level3")
 		}
 		
 		// set the map focus to the route which is not avoiding any risk areas 
@@ -244,6 +270,8 @@ $("#submit").click(function (e) {
 			[routes[0].bbox[3], routes[0].bbox[2]]
 		];
 		mymap.flyToBounds(bbox);
+
+		$('#none').tab('show');
 
 
 	} else {
@@ -269,25 +297,23 @@ function addRouteToMap(route, layer) {
 
 		addToMap(route.features[0], noneLayer, "#0B0B61");
 
-		noneBuffered = turf.buffer(route, 50, { units: 'meters' });
 		addToMap(noneBuffered, noneLayer, "#00c804");
 
 		navigationInfo(route, layer);
 
+
 		// the noneLayer is shown initially, thats why the highlighting is not activated as usually by the user (function mymap.on('overlayadd', function (eo))
 		if (routeLayerSelectionActive === false) {
 			routeLayerSelectionActive = true;
-			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
-			highlight(pointsInsidePolygon);
-			createChart(pointsInsidePolygon);
+			console.log(nonePointsInsidePolygon)
+			highlight(nonePointsInsidePolygon);
+			
 		}
 	}
 
 	if (layer === "class5Layer") {
 		class5Layer.clearLayers();
 		addToMap(route.features[0], class5Layer, "#58FAF4");
-
-		class5Buffered = turf.buffer(route, 50, { units: 'meters' });
 		addToMap(class5Buffered, class5Layer, "#00c804");
 
 		navigationInfo(route, layer);
@@ -296,7 +322,6 @@ function addRouteToMap(route, layer) {
 		class4Layer.clearLayers();
 		addToMap(route.features[0], class4Layer, "#6A0888");
 
-		class4Buffered = turf.buffer(route, 50, { units: 'meters' });
 		addToMap(class4Buffered, class4Layer, "#00c804");
 
 		navigationInfo(route, layer);
@@ -305,7 +330,6 @@ function addRouteToMap(route, layer) {
 		class3Layer.clearLayers();
 		addToMap(route.features[0], class3Layer, "#DF0174");
 
-		class3Buffered = turf.buffer(route, 50, { units: 'meters' });
 		addToMap(class3Buffered, class3Layer, "#00c804");
 
 		navigationInfo(route, layer);
@@ -351,6 +375,7 @@ function navigationInfo(route, layer) {
 	});
 	$("#navList").html(list);
 	$("#navigationInfo").show();
+
 }
 
 // event if one layer is activated in the layers control 
@@ -363,27 +388,23 @@ mymap.on('overlayadd', function (eo) {
  */
 function HiglightingForCheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
-		let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
-		highlight(pointsInsidePolygon);
-		createChart(pointsInsidePolygon);
+		highlight(nonePointsInsidePolygon);
+		$('#none').tab('show');
 
 	}
 	if (layerName === 'level 5') {
-		let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
-		highlight(pointsInsidePolygon);
-		createChart(pointsInsidePolygon);
+		highlight(class5PointsInsidePolygon);
+		$('#level5').tab('show');
 
 	}
 	if (layerName === 'level 4') {
-		let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
-		highlight(pointsInsidePolygon);
-		createChart(pointsInsidePolygon);
+		highlight(class4PointsInsidePolygon);
+		$('#level4').trigger('click')
 
 	}
 	if (layerName === 'level 3') {
-		let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
-		highlight(pointsInsidePolygon);
-		createChart(pointsInsidePolygon);
+		highlight(class3PointsInsidePolygon);
+		$('#level3').trigger('click')
 
 	}
 }
@@ -413,20 +434,16 @@ mymap.on('overlayremove ', function (eo) {
  */
 function RemoveHighlightingForUncheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
-		let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
-		removeHighlight(pointsInsidePolygon);
+		removeHighlight(nonePointsInsidePolygon);
 	}
 	if (layerName === 'level 5') {
-		let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
-		removeHighlight(pointsInsidePolygon);
+		removeHighlight(class5PointsInsidePolygon);
 	}
 	if (layerName === 'level 4') {
-		let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
-		removeHighlight(pointsInsidePolygon);
+		removeHighlight(class4PointsInsidePolygon);
 	}
 	if (layerName === 'level 3') {
-		let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
-		removeHighlight(pointsInsidePolygon);
+		removeHighlight(class3PointsInsidePolygon);
 	}
 }
 
@@ -529,3 +546,14 @@ L.Control.Layers.include({
 		return layers;
 	}
 });
+
+function show(id) {
+	var element = document.getElementById(id);
+	element.classList.remove("hideme");
+  }
+
+function hide(id) {
+	var element = document.getElementById(id);
+	element.classList.add("hideme");
+  }
+
