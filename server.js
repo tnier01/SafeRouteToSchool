@@ -2,6 +2,12 @@ const express = require('express');
 
 const app = express();
 
+const logger = require('morgan');
+const cors = require('cors');
+
+app.use(logger('dev'));
+app.use(cors());
+
 
 app.use("/js", express.static(__dirname + '/js'))
 app.use("/css", express.static(__dirname + '/css'))
