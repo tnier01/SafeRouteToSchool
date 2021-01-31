@@ -125,8 +125,8 @@ mymap.on('overlayadd', function (eventLayer) {
 function createButton(label, container, id) {
 	var btn = L.DomUtil.create('button', '', container);
 	btn.setAttribute('type', 'button');
-	btn.setAttribute('class', 'btn btn-primary')
-	btn.setAttribute('id', id)
+	btn.setAttribute('class', 'btn btn-primary');
+	btn.setAttribute('id', id);
 	btn.innerHTML = label;
 	return btn;
 }
@@ -138,7 +138,7 @@ function addToMap(geojson, LayerGroup, color) {
 		fillOpacity: 0.6,
 		stroke: false,
 		//dashArray: '8 12',
-	})
+	});
 	LayerGroup.addLayer(geometry);
 }
 
@@ -404,6 +404,8 @@ $("#submit").click(function (e) {
  * @param {*} layer 
  */
 function addRouteToMap(route, layer) {
+
+	console.log(route.features[0]);
 
 	if (layer === "noneLayer") {
 		noneLayer.clearLayers();
