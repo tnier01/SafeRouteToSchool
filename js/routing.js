@@ -648,7 +648,7 @@ function toggle_visibility(divId, buttonId) {
 	}
 	else {
 		document.getElementById(divId).style.visibility = 'hidden'; 
-		document.getElementById(buttonId).style.bottom = '-114.5px';
+		document.getElementById(buttonId).style.bottom = '-156px';
 	}
 }
 

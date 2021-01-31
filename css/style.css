@@ -77,6 +77,19 @@
     margin-left: 10px; 
     position: relative; 
     margin-bottom: 10px;
+
+    background-color: rgba(255, 255, 255, 1);
+    bottom: 0px; 
+    border: 2px solid rgba(0,0,0,0.2);
+    background-clip: padding-box;
+    box-shadow: none;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    padding: 6px 10px 6px 6px;
+    font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+    border-radius: 5px;
+  
+
 }
 
 body{ overflow: hidden;}
