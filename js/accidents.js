@@ -6,12 +6,12 @@ function getColor(p) {
 
 function style(feature) {
     return {
-        fillColor: '#ff1200', //getColor(feature.properties),
+        fillColor: '#ff5d5a', //getColor(feature.properties),
         radius: 5,
         color: "#000",
         weight: 1,
         opacity: 1,
-        fillOpacity: 0.8
+        fillOpacity: 1.0
     };
 }
 

@@ -59,10 +59,10 @@ legend_risk.onAdd = function (map) {
 
 	var div = L.DomUtil.create("div", "legend");
 	div.innerHTML += "<h4>Risk levels</h4>";
-	div.innerHTML += '<i style="background: #800000"></i><span>Level 5</span><br>';
-	div.innerHTML += '<i style="background: #b30000""></i><span>Level 4</span><br>';
-	div.innerHTML += '<i style="background: #ff1a1a"></i><span>Level 3</span><br>';
-	div.innerHTML += '<i style="background: #ff8080"></i><span>Level 2</span><br>';
+	div.innerHTML += '<i style="background: #690000"></i><span>Level 5</span><br>';
+	div.innerHTML += '<i style="background: #e22b00""></i><span>Level 4</span><br>';
+	div.innerHTML += '<i style="background: #ffbc48"></i><span>Level 3</span><br>';
+	//div.innerHTML += '<i style="background: #ff8080"></i><span>Level 2</span><br>';
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
 	return div;
@@ -70,35 +70,79 @@ legend_risk.onAdd = function (map) {
 
 legend_risk.addTo(mymap);
 
+var legend_routes = L.control({position: 'bottomright'});
+
+legend_routes.onAdd = function (map) {
+
+	var div = L.DomUtil.create("div", "legend l_routes");
+	div.innerHTML += "<h4>Routes </h4>";
+	div.innerHTML += "<span>(avoided risk level)</span><br>";
+
+	var color;
+
+	if(mymap.hasLayer(noneLayer)) {
+		div.innerHTML += '<i style="background: #71007c"></i><span>None</span><br>';
+	}
+	if(mymap.hasLayer(class5Layer)) {
+		div.innerHTML += '<i style="background: #1d37c1""></i><span>Level 5</span><br>';
+	}
+	if(mymap.hasLayer(class4Layer)) {
+		div.innerHTML += '<i style="background: #2896d7"></i><span>Level 4</span><br>';
+	}
+	if(mymap.hasLayer(class3Layer)) {
+		div.innerHTML += '<i style="background: #52efba"></i><span>Level 3</span><br>';
+	}
+	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
+
+	return div;
+};
+
+
 mymap.on('overlayremove', function (eventLayer) {
 	if (eventLayer.name === 'Risk Areas') {
 		this.removeControl(legend_risk);
-	} else {
-
+	}
+	if (eventLayer.name === 'none' || eventLayer.name === 'level 5' || eventLayer.name === 'level 4' || eventLayer.name === 'level 3') {
+		this.removeControl(legend_routes);
+		this.addControl(legend_routes);
+		if (!mymap.hasLayer(class3Layer) && !mymap.hasLayer(class4Layer) && !mymap.hasLayer(class5Layer) && !mymap.hasLayer(noneLayer)) {
+			this.removeControl(legend_routes);
+		}
 	}
 });
 
 mymap.on('overlayadd', function (eventLayer) {
 	if (eventLayer.name === 'Risk Areas') {
 		this.addControl(legend_risk);
-	} else {
-
+		accidentMarkers.bringToFront();
+	}
+	if (eventLayer.name === 'none' || eventLayer.name === 'level 5' || eventLayer.name === 'level 4' || eventLayer.name === 'level 3') {
+		this.removeControl(legend_routes);
+		this.addControl(legend_routes);
 	}
 });
 
 function createButton(label, container, id) {
 	var btn = L.DomUtil.create('button', '', container);
 	btn.setAttribute('type', 'button');
-	btn.setAttribute('class', 'btn btn-primary')
-	btn.setAttribute('id', id)
+	btn.setAttribute('class', 'btn btn-primary');
+	btn.setAttribute('id', id);
 	btn.innerHTML = label;
 	return btn;
 }
 
 function addToMap(geojson, LayerGroup, color) {
 	//LayerGroup.clearLayers();
+    let stroke = true;
+    if(LayerGroup == areaLayer) {
+        stroke = false;
+    }
 	let geometry = L.geoJson(geojson, {
-		"color": color
+		"color": color,
+		fillOpacity: 0.6,
+		stroke: stroke,
+        weight: 5
+		//dashArray: '8 12',
 	});
 	LayerGroup.addLayer(geometry);
 }
@@ -129,10 +173,17 @@ function setAddress(pos, selector) {
 	});
 }
 
-addToMap(class5, areaLayer, "#800000")
+
+/*addToMap(class5, areaLayer, "#690000")
 addToMap(class4, areaLayer, "#b30000")
-addToMap(class3, areaLayer, "#ff1a1a")
-addToMap(class2, areaLayer, "#ff8080")
+addToMap(class3, areaLayer, "#ff5f64")*/
+
+addToMap(class5, areaLayer, "#690000")
+addToMap(class4, areaLayer, "#e22b00")
+addToMap(class3, areaLayer, "#ffbc48")
+
+
+// addToMap(class2, areaLayer, "#ff8080")
 //addToMap(class1, areaLayer, "#ff8080")
 
 /**
@@ -181,7 +232,7 @@ function requestDatafromOpenRouteService(profile, data, risk) {
  * - by calling the function addRouteToMap, all routes and corresponding buffers and markers are added to the map
  */
 $("#submit").click(function (e) {
-	
+
 	let start = $("#start").val();
 	let finish = $("#finish").val();
 	let profile = $("input[name='transport']:checked").val();
@@ -262,7 +313,7 @@ $("#submit").click(function (e) {
 
 		sameRoutes=false
 
-		// if all routes are the same, only the none route is shown 
+		// if all routes are the same, only the none route is shown
 		if (routes[0].statusText === undefined && routes[1].statusText === undefined && routes[2].statusText === undefined && routes[3].statusText === undefined) {
 			if ((JSON.stringify(routes[0].features[0].geometry.coordinates) == JSON.stringify(routes[3].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[1].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[2].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[3].features[0].geometry.coordinates))) {
 				sameRoutes = true;
@@ -303,7 +354,7 @@ $("#submit").click(function (e) {
 			hide("level5")
 		}
 		if (routes[2].statusText === undefined && sameRoutes===false) {
-			
+
 			class4Buffered = turf.buffer(routes[2], 50, { units: 'meters' });
 			class4PointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
 			createChart(class4PointsInsidePolygon,4)
@@ -336,6 +387,7 @@ $("#submit").click(function (e) {
 		$('#none').tab("show");
 		hide("overlay")
 
+        legend_routes.addTo(mymap);
 
 	} else {
 		alert("please enter valid start and destination");
@@ -352,51 +404,51 @@ $("#submit").click(function (e) {
 /**
  * function to add the routes and the corresponding buffers and markers to the map. 
  * The markers are added to the map by calling the function navigationInfo. 
- * @param {*} route 
+ * In the final version buffers and navigation are commented out, because they do not fit to the user story of the application.
+ * @param {*} route
  * @param {*} layer 
  */
 function addRouteToMap(route, layer) {
 
+	console.log(route.features[0]);
+
 	if (layer === "noneLayer") {
 		noneLayer.clearLayers();
 
-		addToMap(route.features[0], noneLayer, "#0B0B61");
+		addToMap(route.features[0], noneLayer, "#71007c");
 
-		addToMap(noneBuffered, noneLayer, "#00c804");
-
-		navigationInfo(route, layer);
+		//addToMap(noneBuffered, noneLayer, "#00c804");
+		//navigationInfo(route, layer);
 
 		var checkedLayers = layersControl.getOverlays();  
 		// the noneLayer is shown initially, thats why the highlighting is not activated as usually by the user (function mymap.on('overlayadd', function (eo))
 		if (routeLayerSelectionActive === false && checkedLayers["none"] === true) {
 			routeLayerSelectionActive = true;
 			highlight(nonePointsInsidePolygon);
-			
+
 		}
 	}
 
 	if (layer === "class5Layer") {
 		class5Layer.clearLayers();
-		addToMap(route.features[0], class5Layer, "#58FAF4");
-		addToMap(class5Buffered, class5Layer, "#00c804");
+		addToMap(route.features[0], class5Layer, "#1d37c1");
 
-		navigationInfo(route, layer);
+		//addToMap(class5Buffered, class5Layer, "#00c804");
+		//navigationInfo(route, layer);
 	}
 	if (layer === "class4Layer") {
 		class4Layer.clearLayers();
-		addToMap(route.features[0], class4Layer, "#6A0888");
+		addToMap(route.features[0], class4Layer, "#2896d7");
 
-		addToMap(class4Buffered, class4Layer, "#00c804");
-
-		navigationInfo(route, layer);
+		//addToMap(class4Buffered, class4Layer, "#00c804");
+		//navigationInfo(route, layer);
 	}
 	if (layer === "class3Layer") {
 		class3Layer.clearLayers();
-		addToMap(route.features[0], class3Layer, "#DF0174");
+		addToMap(route.features[0], class3Layer, "#52efba");
 
-		addToMap(class3Buffered, class3Layer, "#00c804");
-
-		navigationInfo(route, layer);
+		//addToMap(class3Buffered, class3Layer, "#00c804");
+		//navigationInfo(route, layer);
 	}
 }
 
@@ -636,18 +688,18 @@ function hide(id) {
   }
 
 /**
- * function to hide an html div and chane position of corresponding button 
- * @param {} id 
+ * function to hide an html div and chane position of corresponding button
+ * @param {} id
  */
 function toggle_visibility(divId, buttonId) {
-	visibility = document.getElementById(divId).style.visibility; 
+	visibility = document.getElementById(divId).style.visibility;
 	if (visibility === "hidden") {
-		document.getElementById(divId).style.visibility = 'visible'; 
+		document.getElementById(divId).style.visibility = 'visible';
 		document.getElementById(buttonId).style.bottom = '0px';
 	}
 	else {
-		document.getElementById(divId).style.visibility = 'hidden'; 
-		document.getElementById(buttonId).style.bottom = '-114.5px';
+		document.getElementById(divId).style.visibility = 'hidden';
+		document.getElementById(buttonId).style.bottom = '-156px';
 	}
 }
 

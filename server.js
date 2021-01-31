@@ -11,7 +11,6 @@ app.use('/turf', express.static(__dirname + '/node_modules/@turf/turf'));
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 app.use('/typeahead', express.static(__dirname + '/node_modules/corejs-typeahead/dist'));
 
-
 app.use('/chart.js', express.static(__dirname + '/node_modules/chart.js/dist'));
 
 app.use("/data", express.static(__dirname + '/data'))
