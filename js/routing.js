@@ -444,13 +444,14 @@ function navigationInfo(route, layer) {
 
 // event if one layer is activated in the layers control 
 mymap.on('overlayadd', function (eo) {
-	HiglightingForCheckedLayersInLayerControl(eo.name);
+	HiglightingForCheckedLayersInLayerControl(eo.name, true);
 });
 
 /**
  * function to highlight the points inside the buffer of a certain route, if the layer is activated in the layers control. 
  */
-function HiglightingForCheckedLayersInLayerControl(layerName) {
+function HiglightingForCheckedLayersInLayerControl(layerName, show) {
+
 	if (layerName === 'none') {
 		highlight(nonePointsInsidePolygon);
 		if(show){
@@ -459,17 +460,23 @@ function HiglightingForCheckedLayersInLayerControl(layerName) {
 	}
 	if (layerName === 'level 5') {
 		highlight(class5PointsInsidePolygon);
-		$('#level5').tab("show");
+		if(show){
+			$('#level5').tab("show");
+		}
 
 	}
 	if (layerName === 'level 4') {
 		highlight(class4PointsInsidePolygon);
-		$('#level4').tab("show");
+		if(show){
+			$('#level4').tab("show");
+		}
 
 	}
 	if (layerName === 'level 3') {
 		highlight(class3PointsInsidePolygon);
-		$('#level3').tab("show");
+		if(show){
+			$('#level3').tab("show");
+		}
 
 	}
 }
@@ -479,18 +486,24 @@ mymap.on('overlayremove ', function (eo) {
 
 	RemoveHighlightingForUncheckedLayersInLayerControl(eo.name);
 	var checkedLayers = layersControl.getOverlays(); // check if there are points which need to be highlighted again (needed because points often on same route) 
-
+	let shown=false;
 	if (checkedLayers["none"] === true) {
-		HiglightingForCheckedLayersInLayerControl('none');
+		HiglightingForCheckedLayersInLayerControl('none', !shown);
+		shown=true
+
 	}
 	if (checkedLayers["level 5"] === true) {
-		HiglightingForCheckedLayersInLayerControl('level 5');
+
+		HiglightingForCheckedLayersInLayerControl('level 5', !shown);
+		shown=true
 	}
 	if (checkedLayers["level 4"] === true) {
-		HiglightingForCheckedLayersInLayerControl('level 4');
+		HiglightingForCheckedLayersInLayerControl('level 4', !shown);
+		shown=true
 	}
 	if (checkedLayers["level 3"] === true) {
-		HiglightingForCheckedLayersInLayerControl('level 3');
+		HiglightingForCheckedLayersInLayerControl('level 3', !shown);
+
 	}
 });
 
