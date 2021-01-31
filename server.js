@@ -11,6 +11,8 @@ app.use('/turf', express.static(__dirname + '/node_modules/@turf/turf'));
 
 app.use('/chart.js', express.static(__dirname + '/node_modules/chart.js/dist'));
 
+app.use("/leaflet.pattern", express.static(__dirname + "/node_modules/leaflet.pattern/dist"));
+
 app.use("/data", express.static(__dirname + '/data'))
 app.use("/private", express.static(__dirname + '/private'))
 
