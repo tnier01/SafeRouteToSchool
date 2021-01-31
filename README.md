@@ -41,25 +41,16 @@ npm start
 7. Go to the application under https://localhost:3000
 
 #### next tasks 
-- update Server (Nick)
-- legend for routes, like it is also available for the risk areas(Jan) 
-- change representation of the risk areas (color, lines) so that they the different levels are better distinguishable. Furthermore a connection between the routes and the risk areas concerning color or marking would be interesting (Jan) 
-- accidents marker should be always above the risk areas, so that they are clickable (Jan) 
-- group layer for accidents marker (pedestrian, bicycle, others) (Jan) 
-- responsive design/ create the design described by the mockup (Nick)
-- something like a popup from the map which can be opened and closed for the submit process (Tom) 
-- grey suggestion in the start and finish field ("street, number, place") (Tom)
+- responsive design (Nick)
+- adapt month to real month in the popup (Jan)
+- adapt color of the routes (Jan)
+- legend of the risk levels should have the same size like routes legend (Jan) 
+- finish how-to and impressum (Tom)
+- video (Aysel) 
+- delete route markers + route instructions (Tom) 
+- only show every second number in the statistics (Jan) 
 - insert the new density map in our application and proof if it works (Mirjeta)
 - limit the map extent to Münster (Mirjeta) 
-
-#### topics
-- route instructions (especially relative big markers) neccessary?
-
-#### possible new tasks 
-- fit the names of the routes in the route selection to make them unambiguous 
-- add data for other years 
-- make a video of the application 
-- change style of legends to styling of leaflet? 
 
 
 
