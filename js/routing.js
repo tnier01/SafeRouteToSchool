@@ -81,16 +81,16 @@ legend_routes.onAdd = function (map) {
 	var color;
 
 	if(mymap.hasLayer(noneLayer)) {
-		div.innerHTML += '<i style="background: #0B0B61"></i><span>None</span><br>';
+		div.innerHTML += '<i style="background: #71007c"></i><span>None</span><br>';
 	}
 	if(mymap.hasLayer(class5Layer)) {
-		div.innerHTML += '<i style="background: #58FAF4""></i><span>Level 5</span><br>';
+		div.innerHTML += '<i style="background: #1d37c1""></i><span>Level 5</span><br>';
 	}
 	if(mymap.hasLayer(class4Layer)) {
-		div.innerHTML += '<i style="background: #6A0888"></i><span>Level 4</span><br>';
+		div.innerHTML += '<i style="background: #2896d7"></i><span>Level 4</span><br>';
 	}
 	if(mymap.hasLayer(class3Layer)) {
-		div.innerHTML += '<i style="background: #DF0174"></i><span>Level 3</span><br>';
+		div.innerHTML += '<i style="background: #52efba"></i><span>Level 3</span><br>';
 	}
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
@@ -133,10 +133,15 @@ function createButton(label, container, id) {
 
 function addToMap(geojson, LayerGroup, color) {
 	//LayerGroup.clearLayers();
+    let stroke = true;
+    if(LayerGroup == areaLayer) {
+        stroke = false;
+    }
 	let geometry = L.geoJson(geojson, {
 		"color": color,
 		fillOpacity: 0.6,
-		stroke: false,
+		stroke: stroke,
+        weight: 5
 		//dashArray: '8 12',
 	});
 	LayerGroup.addLayer(geometry);
@@ -410,7 +415,7 @@ function addRouteToMap(route, layer) {
 	if (layer === "noneLayer") {
 		noneLayer.clearLayers();
 
-		addToMap(route.features[0], noneLayer, "#0B0B61");
+		addToMap(route.features[0], noneLayer, "#71007c");
 
 		//addToMap(noneBuffered, noneLayer, "#00c804");
 		//navigationInfo(route, layer);
@@ -426,21 +431,21 @@ function addRouteToMap(route, layer) {
 
 	if (layer === "class5Layer") {
 		class5Layer.clearLayers();
-		addToMap(route.features[0], class5Layer, "#58FAF4");
+		addToMap(route.features[0], class5Layer, "#1d37c1");
 
 		//addToMap(class5Buffered, class5Layer, "#00c804");
 		//navigationInfo(route, layer);
 	}
 	if (layer === "class4Layer") {
 		class4Layer.clearLayers();
-		addToMap(route.features[0], class4Layer, "#6A0888");
+		addToMap(route.features[0], class4Layer, "#2896d7");
 
 		//addToMap(class4Buffered, class4Layer, "#00c804");
 		//navigationInfo(route, layer);
 	}
 	if (layer === "class3Layer") {
 		class3Layer.clearLayers();
-		addToMap(route.features[0], class3Layer, "#DF0174");
+		addToMap(route.features[0], class3Layer, "#52efba");
 
 		//addToMap(class3Buffered, class3Layer, "#00c804");
 		//navigationInfo(route, layer);
