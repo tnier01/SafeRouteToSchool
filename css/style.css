@@ -79,7 +79,7 @@
     margin-bottom: 10px;
 }
 
-body{ overflow: hidden;}
+body{ overflow-x: hidden;}
 
 #overlay {
     position: fixed; /* Sit on top of the page content */
@@ -103,3 +103,28 @@ body{ overflow: hidden;}
 
 
   }
+
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+
+$grid-breakpoints: (
+  xxs: 0,
+  xs: 375px,
+  sm: 544px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1300px
+);
+
+$container-max-widths: (
+  xxs: 375px,
+  xs: 375px,
+  sm: 544px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1300px
+);
+
+@import "bootstrap";

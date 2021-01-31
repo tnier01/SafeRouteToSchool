@@ -453,8 +453,9 @@ mymap.on('overlayadd', function (eo) {
 function HiglightingForCheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
 		highlight(nonePointsInsidePolygon);
-		$('#none').tab("show");
-
+		if(show){
+			$('#none').tab("show");
+		}
 	}
 	if (layerName === 'level 5') {
 		highlight(class5PointsInsidePolygon);
