@@ -52,6 +52,10 @@ npm start
 - insert the new density map in our application and proof if it works (Mirjeta)
 - limit the map extent to Münster (Mirjeta) 
 
+#### open questions
+- name? (SafeRouteToSchool vs. SafeRoute)
+
+
 
 
 
