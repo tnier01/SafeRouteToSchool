@@ -40,6 +40,12 @@ accidentMarkers = L.geoJSON(accidents, {
 
 layersControl.addOverlay(accidentMarkers, "Accident Markers");
 
+chartW= []
+chartC= []
+chartT= []
+chartL= []
+
+
 accidentMarkers.bringToFront();
 
 /*
@@ -100,7 +106,7 @@ function updateObj(arr) {
     return stats;
 }
 
-function createChart(geojson) {
+function createChart(geojson, number) {
 
     let obj = updateObj(geojson);
 
@@ -172,10 +178,22 @@ function createChart(geojson) {
 
     console.log(dataTime);
 
+    
 
-    let ctw = document.getElementById('weekdays').getContext('2d');
+    if(chartW[number] !== undefined){
+        console.log("redraw")
+        chartW[number].destroy()
+        chartC[number].destroy()
+        chartT[number].destroy()
+        chartL[number].destroy()
+    }
 
-    let chartW = new Chart(ctw, {
+
+    let ctw = document.getElementById('weekdays' +number).getContext('2d');
+
+
+
+    chartW[number] = new Chart(ctw, {
         type: 'bar',
         data: dataWeekdays,
         options: {
@@ -195,9 +213,9 @@ function createChart(geojson) {
         }
     });
 
-    let ctc = document.getElementById('category').getContext('2d');
+    let ctc = document.getElementById('category'+number).getContext('2d');
 
-    let chartC = new Chart(ctc, {
+    chartC[number] = new Chart(ctc, {
         type: 'bar',
         data: dataCategory,
         options: {
@@ -217,9 +235,9 @@ function createChart(geojson) {
         }
     });
 
-    let ctl = document.getElementById('light').getContext('2d');
+    let ctl = document.getElementById('light'+number).getContext('2d');
 
-    let chartL = new Chart(ctl, {
+    chartL[number] = new Chart(ctl, {
         type: 'bar',
         data: dataLight,
         options: {
@@ -239,9 +257,9 @@ function createChart(geojson) {
         }
     });
 
-    let ctt = document.getElementById('type').getContext('2d');
+    let ctt = document.getElementById('type'+number).getContext('2d');
 
-    let chartT = new Chart(ctt, {
+    chartT[number] = new Chart(ctt, {
         type: 'bar',
         data: dataType,
         options: {
@@ -261,6 +279,8 @@ function createChart(geojson) {
         }
     });
 
+
+    /** 
     let ctp = document.getElementById('participants').getContext('2d');
 
     let chartP = new Chart(ctp, {
@@ -303,8 +323,9 @@ function createChart(geojson) {
                 fontSize: 20
             }
         }
-    });
+    });*/
 }
+
 
 //createChart(accidents);
 

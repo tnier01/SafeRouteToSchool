@@ -2,6 +2,10 @@ var noneBuffered;
 var class5Buffered;
 var class4Buffered;
 var class3Buffered;
+var nonePointsInsidePolygon;
+var class5PointsInsidePolygon;
+var class4PointsInsidePolygon;
+var class3PointsInsidePolygon;
 var routeLayerSelectionActive = false;
 
 mymap.on('click', function (e) {
@@ -121,45 +125,19 @@ mymap.on('overlayadd', function (eventLayer) {
 function createButton(label, container, id) {
 	var btn = L.DomUtil.create('button', '', container);
 	btn.setAttribute('type', 'button');
-	btn.setAttribute('class', 'button')
+	btn.setAttribute('class', 'btn btn-primary')
 	btn.setAttribute('id', id)
 	btn.innerHTML = label;
 	return btn;
 }
 
-var stripes_5 = new L.StripePattern({
-	width: 30,
-	height: 8,
-	angle: 90,
-	color: '#690000'
-});
-stripes_5.addTo(mymap);
-
-var stripes_4 = new L.StripePattern({
-	width: 3,
-	height: 12,
-	angle: 45,
-	color: '#b30000'
-});
-stripes_4.addTo(mymap);
-
-var stripes_3 = new L.StripePattern({
-	width: 3,
-	height: 15,
-	//angle: 30,
-	color: '#ff5f64',
-	dashArray: '8 12'
-});
-stripes_3.addTo(mymap);
-
-function addToMap(geojson, LayerGroup, color, pattern) {
+function addToMap(geojson, LayerGroup, color) {
 	//LayerGroup.clearLayers();
 	let geometry = L.geoJson(geojson, {
 		"color": color,
 		fillOpacity: 0.6,
 		stroke: false,
 		//dashArray: '8 12',
-		fillPattern: pattern
 	})
 	LayerGroup.addLayer(geometry);
 }
@@ -190,11 +168,6 @@ function setAddress(pos, selector) {
 	});
 }
 
-/*
-addToMap(class5, areaLayer, "#690000", stripes_5)
-addToMap(class4, areaLayer, "#b30000", stripes_4)
-addToMap(class3, areaLayer, "#ff5f64", stripes_3)
-*/
 
 /*addToMap(class5, areaLayer, "#690000")
 addToMap(class4, areaLayer, "#b30000")
@@ -254,23 +227,15 @@ function requestDatafromOpenRouteService(profile, data, risk) {
  * - by calling the function addRouteToMap, all routes and corresponding buffers and markers are added to the map
  */
 $("#submit").click(function (e) {
+
 	let start = $("#start").val();
 	let finish = $("#finish").val();
 	let profile = $("input[name='transport']:checked").val();
+	show("overlay")
+	document.getElementById("overlay").offsetHeight;
 
-	// delete all highlighting, so that there is no intital highlighting if the transportation type is changed 
-	if (noneBuffered !== undefined) {
-		RemoveHighlightingForUncheckedLayersInLayerControl('none')
-	}
-	if (class3Buffered !== undefined) {
-		RemoveHighlightingForUncheckedLayersInLayerControl('level 3')
-	}
-	if (class4Buffered !== undefined) {
-		RemoveHighlightingForUncheckedLayersInLayerControl('level 4')
-	}
-	if (class5Buffered !== undefined) {
-		RemoveHighlightingForUncheckedLayersInLayerControl('level 5')
-	}
+	// delete all highlighting, so that there is no intital highlighting if the transportation type is changed
+	removeHighlight(accidents)
 
 	// needed to initialize each of the layer
 	noneBuffered = undefined;
@@ -341,43 +306,70 @@ $("#submit").click(function (e) {
 			layersControl.addOverlay(class3Layer, "level 3");
 		}
 
-		// if all routes are the same, only the none route is shown 
+		sameRoutes=false
+
+		// if all routes are the same, only the none route is shown
 		if (routes[0].statusText === undefined && routes[1].statusText === undefined && routes[2].statusText === undefined && routes[3].statusText === undefined) {
 			if ((JSON.stringify(routes[0].features[0].geometry.coordinates) == JSON.stringify(routes[3].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[1].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[2].features[0].geometry.coordinates)) && (JSON.stringify(routes[0].features[0].geometry.coordinates) === JSON.stringify(routes[3].features[0].geometry.coordinates))) {
-				console.log("Yeah");
+				sameRoutes = true;
 				layersControl.removeLayer(class5Layer);
 				mymap.removeLayer(class5Layer);
+				hide("level5")
 				layersControl.removeLayer(class4Layer);
 				mymap.removeLayer(class4Layer);
+				hide("level4")
 				layersControl.removeLayer(class3Layer);
 				mymap.removeLayer(class3Layer);
+				hide("level3")
 			}
 		}
 
+
 		// if there is no route available, it is not added to the map and is not available in the layer control 
 		if (routes[0].statusText === undefined) {
+			noneBuffered = turf.buffer(routes[0], 50, { units: 'meters' });
+			nonePointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
 			addRouteToMap(routes[0], "noneLayer");
+			createChart(nonePointsInsidePolygon, 0)
+			show("none")
 		}
 		else {
 			layersControl.removeLayer(noneLayer);
+			hide("none")
 		}
-		if (routes[1].statusText === undefined) {
+		if (routes[1].statusText === undefined && sameRoutes===false) {
+			class5Buffered = turf.buffer(routes[1], 50, { units: 'meters' });
+			class5PointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
 			addRouteToMap(routes[1], "class5Layer");
+			createChart(class5PointsInsidePolygon,5)
+			show("level5")
 		}
 		else {
 			layersControl.removeLayer(class5Layer);
+			hide("level5")
 		}
-		if (routes[2].statusText === undefined) {
+		if (routes[2].statusText === undefined && sameRoutes===false) {
+
+			class4Buffered = turf.buffer(routes[2], 50, { units: 'meters' });
+			class4PointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
+			createChart(class4PointsInsidePolygon,4)
 			addRouteToMap(routes[2], "class4Layer");
+			show("level4")
 		}
 		else {
 			layersControl.removeLayer(class4Layer);
+			hide("level4")
 		}
-		if (routes[3].statusText === undefined) {
+		if (routes[3].statusText === undefined&& sameRoutes===false ) {
+			class3Buffered = turf.buffer(routes[3], 50, { units: 'meters' });
+			class3PointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
+			createChart(class3PointsInsidePolygon,3)
 			addRouteToMap(routes[3], "class3Layer");
+			show("level3")
 		}
 		else {
 			layersControl.removeLayer(class3Layer);
+			hide("level3")
 		}
 
 		// set the map focus to the route which is not avoiding any risk areas 
@@ -387,11 +379,16 @@ $("#submit").click(function (e) {
 		];
 		mymap.flyToBounds(bbox);
 
-		legend_routes.addTo(mymap);
+		$('#none').tab("show");
+		hide("overlay")
+
+        legend_routes.addTo(mymap);
 
 	} else {
 		alert("please enter valid start and destination");
+		hide("overlay")
 	}
+
 });
 
 //addToMap(class5, areaLayer, "#800000")
@@ -402,7 +399,8 @@ $("#submit").click(function (e) {
 /**
  * function to add the routes and the corresponding buffers and markers to the map. 
  * The markers are added to the map by calling the function navigationInfo. 
- * @param {*} route 
+ * In the final version buffers and navigation are commented out, because they do not fit to the user story of the application.
+ * @param {*} route
  * @param {*} layer 
  */
 function addRouteToMap(route, layer) {
@@ -412,18 +410,15 @@ function addRouteToMap(route, layer) {
 
 		addToMap(route.features[0], noneLayer, "#0B0B61");
 
-		noneBuffered = turf.buffer(route, 50, { units: 'meters' });
 		//addToMap(noneBuffered, noneLayer, "#00c804");
-
-		navigationInfo(route, layer);
+		//navigationInfo(route, layer);
 
 		var checkedLayers = layersControl.getOverlays();  
 		// the noneLayer is shown initially, thats why the highlighting is not activated as usually by the user (function mymap.on('overlayadd', function (eo))
 		if (routeLayerSelectionActive === false && checkedLayers["none"] === true) {
 			routeLayerSelectionActive = true;
-			let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
-			highlight(pointsInsidePolygon);
-			createChart(pointsInsidePolygon);
+			highlight(nonePointsInsidePolygon);
+
 		}
 	}
 
@@ -431,28 +426,22 @@ function addRouteToMap(route, layer) {
 		class5Layer.clearLayers();
 		addToMap(route.features[0], class5Layer, "#58FAF4");
 
-		class5Buffered = turf.buffer(route, 50, { units: 'meters' });
 		//addToMap(class5Buffered, class5Layer, "#00c804");
-
-		navigationInfo(route, layer);
+		//navigationInfo(route, layer);
 	}
 	if (layer === "class4Layer") {
 		class4Layer.clearLayers();
 		addToMap(route.features[0], class4Layer, "#6A0888");
 
-		class4Buffered = turf.buffer(route, 50, { units: 'meters' });
 		//addToMap(class4Buffered, class4Layer, "#00c804");
-
-		navigationInfo(route, layer);
+		//navigationInfo(route, layer);
 	}
 	if (layer === "class3Layer") {
 		class3Layer.clearLayers();
 		addToMap(route.features[0], class3Layer, "#DF0174");
 
-		class3Buffered = turf.buffer(route, 50, { units: 'meters' });
 		//addToMap(class3Buffered, class3Layer, "#00c804");
-
-		navigationInfo(route, layer);
+		//navigationInfo(route, layer);
 	}
 }
 
@@ -495,39 +484,45 @@ function navigationInfo(route, layer) {
 	});
 	$("#navList").html(list);
 	$("#navigationInfo").show();
+
 }
 
 // event if one layer is activated in the layers control 
 mymap.on('overlayadd', function (eo) {
-	HiglightingForCheckedLayersInLayerControl(eo.name);
+	HiglightingForCheckedLayersInLayerControl(eo.name, true);
 });
 
 /**
  * function to highlight the points inside the buffer of a certain route, if the layer is activated in the layers control. 
  */
-function HiglightingForCheckedLayersInLayerControl(layerName) {
+function HiglightingForCheckedLayersInLayerControl(layerName, show) {
+
 	if (layerName === 'none') {
-		let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
-		highlight(pointsInsidePolygon);
-		createChart(pointsInsidePolygon);
+		highlight(nonePointsInsidePolygon);
+		if(show){
+			$('#none').tab("show");
+		}
 
 	}
 	if (layerName === 'level 5') {
-		let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
-		highlight(pointsInsidePolygon);
-		createChart(pointsInsidePolygon);
+		highlight(class5PointsInsidePolygon);
+		if(show){
+			$('#level5').tab("show");
+		}
 
 	}
 	if (layerName === 'level 4') {
-		let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
-		highlight(pointsInsidePolygon);
-		createChart(pointsInsidePolygon);
+		highlight(class4PointsInsidePolygon);
+		if(show){
+			$('#level4').tab("show");
+		}
 
 	}
 	if (layerName === 'level 3') {
-		let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
-		highlight(pointsInsidePolygon);
-		createChart(pointsInsidePolygon);
+		highlight(class3PointsInsidePolygon);
+		if(show){
+			$('#level3').tab("show");
+		}
 
 	}
 }
@@ -537,18 +532,24 @@ mymap.on('overlayremove ', function (eo) {
 
 	RemoveHighlightingForUncheckedLayersInLayerControl(eo.name);
 	var checkedLayers = layersControl.getOverlays(); // check if there are points which need to be highlighted again (needed because points often on same route) 
-
+	let shown=false;
 	if (checkedLayers["none"] === true) {
-		HiglightingForCheckedLayersInLayerControl('none');
+		HiglightingForCheckedLayersInLayerControl('none', !shown);
+		shown=true
+
 	}
 	if (checkedLayers["level 5"] === true) {
-		HiglightingForCheckedLayersInLayerControl('level 5');
+
+		HiglightingForCheckedLayersInLayerControl('level 5', !shown);
+		shown=true
 	}
 	if (checkedLayers["level 4"] === true) {
-		HiglightingForCheckedLayersInLayerControl('level 4');
+		HiglightingForCheckedLayersInLayerControl('level 4', !shown);
+		shown=true
 	}
 	if (checkedLayers["level 3"] === true) {
-		HiglightingForCheckedLayersInLayerControl('level 3');
+		HiglightingForCheckedLayersInLayerControl('level 3', !shown);
+
 	}
 });
 
@@ -557,20 +558,16 @@ mymap.on('overlayremove ', function (eo) {
  */
 function RemoveHighlightingForUncheckedLayersInLayerControl(layerName) {
 	if (layerName === 'none') {
-		let pointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
-		removeHighlight(pointsInsidePolygon);
+		removeHighlight(nonePointsInsidePolygon);
 	}
 	if (layerName === 'level 5') {
-		let pointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
-		removeHighlight(pointsInsidePolygon);
+		removeHighlight(class5PointsInsidePolygon);
 	}
 	if (layerName === 'level 4') {
-		let pointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
-		removeHighlight(pointsInsidePolygon);
+		removeHighlight(class4PointsInsidePolygon);
 	}
 	if (layerName === 'level 3') {
-		let pointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
-		removeHighlight(pointsInsidePolygon);
+		removeHighlight(class3PointsInsidePolygon);
 	}
 }
 
@@ -673,3 +670,31 @@ L.Control.Layers.include({
 		return layers;
 	}
 });
+
+function show(id) {
+	var element = document.getElementById(id);
+	element.classList.remove("hideme");
+  }
+
+function hide(id) {
+	var element = document.getElementById(id);
+	element.classList.add("hideme");
+  }
+
+/**
+ * function to hide an html div and chane position of corresponding button
+ * @param {} id
+ */
+function toggle_visibility(divId, buttonId) {
+	visibility = document.getElementById(divId).style.visibility;
+	if (visibility === "hidden") {
+		document.getElementById(divId).style.visibility = 'visible';
+		document.getElementById(buttonId).style.bottom = '0px';
+	}
+	else {
+		document.getElementById(divId).style.visibility = 'hidden';
+		document.getElementById(buttonId).style.bottom = '-156px';
+	}
+}
+
+
