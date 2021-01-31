@@ -352,6 +352,7 @@ $("#submit").click(function (e) {
 /**
  * function to add the routes and the corresponding buffers and markers to the map. 
  * The markers are added to the map by calling the function navigationInfo. 
+ * In the final version buffers and navigation are commented out, because they do not fit to the user story of the application. 
  * @param {*} route 
  * @param {*} layer 
  */
@@ -362,9 +363,8 @@ function addRouteToMap(route, layer) {
 
 		addToMap(route.features[0], noneLayer, "#0B0B61");
 
-		addToMap(noneBuffered, noneLayer, "#00c804");
-
-		navigationInfo(route, layer);
+		//addToMap(noneBuffered, noneLayer, "#00c804");
+		//navigationInfo(route, layer);
 
 		var checkedLayers = layersControl.getOverlays();  
 		// the noneLayer is shown initially, thats why the highlighting is not activated as usually by the user (function mymap.on('overlayadd', function (eo))
@@ -378,25 +378,23 @@ function addRouteToMap(route, layer) {
 	if (layer === "class5Layer") {
 		class5Layer.clearLayers();
 		addToMap(route.features[0], class5Layer, "#58FAF4");
-		addToMap(class5Buffered, class5Layer, "#00c804");
-
-		navigationInfo(route, layer);
+		
+		//addToMap(class5Buffered, class5Layer, "#00c804");
+		//navigationInfo(route, layer);
 	}
 	if (layer === "class4Layer") {
 		class4Layer.clearLayers();
 		addToMap(route.features[0], class4Layer, "#6A0888");
 
-		addToMap(class4Buffered, class4Layer, "#00c804");
-
-		navigationInfo(route, layer);
+		//addToMap(class4Buffered, class4Layer, "#00c804");
+		//navigationInfo(route, layer);
 	}
 	if (layer === "class3Layer") {
 		class3Layer.clearLayers();
 		addToMap(route.features[0], class3Layer, "#DF0174");
 
-		addToMap(class3Buffered, class3Layer, "#00c804");
-
-		navigationInfo(route, layer);
+		//addToMap(class3Buffered, class3Layer, "#00c804");
+		//navigationInfo(route, layer);
 	}
 }
 
