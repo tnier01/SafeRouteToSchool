@@ -29,6 +29,8 @@ mymap.on('click', function (e) {
 	});
 });
 
+mymap.setMinZoom(10);
+
 /*
 There is a layer for the risk area, and for each of the avoiding risk area routes. 
 In each of these routes, the polyline and the corresponding buffers (are commented out, as they are only used for calculation and should not be displayed) and markers are stored. 
