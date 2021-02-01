@@ -44,7 +44,8 @@ chartW= []
 chartC= []
 chartT= []
 chartL= []
-
+chartP= []
+chartH= []
 
 accidentMarkers.bringToFront();
 
@@ -186,6 +187,8 @@ function createChart(geojson, number) {
         chartC[number].destroy()
         chartT[number].destroy()
         chartL[number].destroy()
+        chartP[number].destroy()
+        chartH[number].destroy()
     }
 
 
@@ -203,6 +206,7 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4
                     }}]
             },
             title: {
@@ -225,6 +229,7 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4
                     }}]
             },
             title: {
@@ -247,6 +252,7 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4
                     }}]
             },
             title: {
@@ -269,6 +275,7 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4
                     }}]
             },
             title: {
@@ -280,10 +287,9 @@ function createChart(geojson, number) {
     });
 
 
-    /** 
-    let ctp = document.getElementById('participants').getContext('2d');
+    let ctp = document.getElementById('participants' + number).getContext('2d');
 
-    let chartP = new Chart(ctp, {
+    chartP[number] = new Chart(ctp, {
         type: 'bar',
         data: dataParticipants,
         options: {
@@ -293,6 +299,7 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4
                     }}]
             },
             title: {
@@ -303,9 +310,9 @@ function createChart(geojson, number) {
         }
     });
 
-    let cth = document.getElementById('time').getContext('2d');
+    let cth = document.getElementById('time' + number).getContext('2d');
 
-    let chartH = new Chart(cth, {
+    chartH[number] = new Chart(cth, {
         type: 'bar',
         data: dataTime,
         options: {
@@ -315,6 +322,7 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4
                     }}]
             },
             title: {
@@ -323,7 +331,7 @@ function createChart(geojson, number) {
                 fontSize: 20
             }
         }
-    });*/
+    });
 }
 
 

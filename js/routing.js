@@ -131,29 +131,33 @@ function addInformation (information) {
 		var length = information[0].features[0].properties.summary.duration
 		time= convertTime(time)
 		length =convertlenght(length)
+		var url = createLink(information[0])
 
-		div.innerHTML += '<i class="color" style="background: #71007c"></i><span>None &nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><br>';
+		div.innerHTML += '<i class="color" style="background: #71007c"></i><span>None &nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
 		}
 		if(information[1]!= "null"){
 			var time = information[1].features[0].properties.summary.duration
 			var length = information[1].features[0].properties.summary.duration
 			time= convertTime(time)
 			length =convertlenght(length)
-		div.innerHTML += '<i class="color" style="background: #1d37c1""></i><span>Level 5</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><br>';
+			var url = createLink(information[1])
+		div.innerHTML += '<i class="color" style="background: #1d37c1""></i><span>Level 5</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
 		}
 		if(information[2]!= "null"){
 			var time = information[2].features[0].properties.summary.duration
 			var length = information[2].features[0].properties.summary.duration
 			time= convertTime(time)
 			length =convertlenght(length)
-		div.innerHTML += '<i class="color"style="background: #2896d7"></i><span>Level 4</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><br>';
+			var url = createLink(information[2])
+		div.innerHTML += '<i class="color"style="background: #2896d7"></i><span>Level 4</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
 		}
 		if(information[3]!= "null"){
 			var time = information[3].features[0].properties.summary.duration
 			var length = information[3].features[0].properties.summary.duration
 			time= convertTime(time)
 			length =convertlenght(length)
-		div.innerHTML += '<i class="color" style="background: #52efba"></i><span>Level 3</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><br>';
+			var url = createLink(information[3])
+		div.innerHTML += '<i class="color" style="background: #52efba"></i><span>Level 3</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
 		}
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
@@ -778,4 +782,38 @@ function toggle_visibility(divId, buttonId) {
 	}
 }
 
+
+function createLink(route){
+	let profile = $("input[name='transport']:checked").val();
+	let segments = route.features[0].properties.segments
+	let transport;
+	if (profile == "driving-car"){
+		transport = "driving"
+	}
+	else if (profile == "cycling-regular"){
+		transport = "bicycling"
+	}
+	else if (profile == "foot-walking"){
+		transport = "walking"
+	}
+
+
+	origin = route.features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][0]
+	
+	max= segments[0].steps.length-1
+	console.log(max)
+	destination = route.features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][0]
+
+	var waypoints= "";
+	for (var i =0; i< max; i++){
+		waypoints += route.features[0].geometry.coordinates[segments[0].steps[i].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[i].way_points[0]][0] +"%7C"
+	}
+
+	console.log(waypoints)
+	waypoints = waypoints.substring(0, waypoints.length - 3);
+	console.log(waypoints)
+	var test = "https://www.google.com/maps/dir/?api=1&origin=" + origin +"&destination="+ destination + "&travelmode=" + transport +"&waypoints=" + waypoints
+
+	return(test)
+}
 
