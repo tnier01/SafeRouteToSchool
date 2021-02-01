@@ -31,17 +31,24 @@ for(var element of areas.features){
             class2.coordinates.push(element.geometry.coordinates)
           break;
         case 3:
-            class3.coordinates.push(element.geometry.coordinates)
+            for (var element1 of element.geometry.coordinates) {
+              class3.coordinates.push(element1)
+            }
             break;
         case 4:
-            class4.coordinates.push(element.geometry.coordinates)
+          for (var element1 of element.geometry.coordinates) {
+            class4.coordinates.push(element1)
+          }
           break;
         case 5:
-            class5.coordinates.push(element.geometry.coordinates)
+          for (var element1 of element.geometry.coordinates) {
+            class5.coordinates.push(element1)
+          }
           break;
         default:
           // code block
       } 
 }
 
-console.log(class1)
+
+console.log(class5)

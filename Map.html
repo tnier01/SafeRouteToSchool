@@ -83,11 +83,11 @@
 							</tr>
 							<tr>
 								<td><label for="start">Start:</label></td>
-								<td><input type="text" class="input form-control" id="start" name="Start" style="width: 100%;" placeholder="Street Nr., City, Country"></td>
+								<td><input type="text" class="input form-control autoComplete" id="start" name="Start" style="width: 100%;" placeholder="Street Nr., City, Country"></td>
 							</tr>
 							<tr>
 								<td><label for="finish">Finish:</label></td>
-								<td><input type="text" class="input form-control" id="finish" name="Finish" style="width: 100%;" placeholder="Street Nr., City, Country"></td>
+								<td><input type="text" class="input form-control autoComplete" id="finish" name="Finish" style="width: 100%;" placeholder="Street Nr., City, Country"></td>
 							</tr>
 							<tr>
 								<td><button id="submit" class="button btn btn-primary">Submit</button></td>
@@ -230,15 +230,24 @@
 	<script src="js/L.TileLayer.BetterWMS.js"></script>
 
 	<script>
-		var mymap = L.map('leafletMap').setView([51.9606649, 7.6261347], 13);
+		var mymap = L.map('leafletMap')
+			.setView([51.9606649, 7.6261347], 13);
+
+		var southWest = L.latLng(51.86758805107504, 7.4562835693359375);
+        var northEast = L.latLng(52.07233159817613,7.813339233398437);
+		var mybounds = L.latLngBounds(southWest, northEast);
+				
+		mymap.setMaxBounds(mybounds)
 
 		var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+			minZoom:12,
 			maxZoom: 18
 		}).addTo(mymap);
 
 		var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+			minZoom: 12,
 			maxZoom: 18
 		});
 	</script>

@@ -183,6 +183,7 @@ addToMap(class4, areaLayer, "#e22b00")
 addToMap(class3, areaLayer, "#ffbc48")
 
 
+
 // addToMap(class2, areaLayer, "#ff8080")
 //addToMap(class1, areaLayer, "#ff8080")
 
