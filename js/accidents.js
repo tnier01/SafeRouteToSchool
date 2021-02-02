@@ -15,19 +15,32 @@ function style(feature) {
     };
 }
 
+let months = {
+    "01" : "January",
+    "02" : "February",
+    "03" : "March",
+    "04" : "April",
+    "05" : "May",
+    "06" : "June",
+    "07" : "July",
+    "08" : "August",
+    "09" : "September",
+    "10" : "October",
+    "11" : "November",
+    "12" : "December"
+};
+
+let participant = {
+    1 : "yes",
+    0 : "no"
+}
+
 function popup(feature, layer) {
-
-    let bike;
-    if (feature.properties.IstRad == 1) {
-        bike = true
-    } else {
-        bike = false
-    }
-
     layer.bindPopup(
+        "<b>Bicycle involved: </b>" + participant[feature.properties.IstRad] + "<br>" +
+        "<b>Pedestrian involved: </b>" + participant[feature.properties.IstFuss] + "<br>" +
         "<b>Time: </b>" + feature.properties.USTUNDE + " h <br>" +
-        "<b>Month: </b>" + feature.properties.UMONAT + "<br>" +
-        "<b>Bicycle involved: </b>" + bike
+        "<b>Month: </b>" + months[feature.properties.UMONAT]
     )
 }
 
