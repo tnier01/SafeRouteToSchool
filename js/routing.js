@@ -61,9 +61,9 @@ legend_risk.onAdd = function (map) {
 
 	var div = L.DomUtil.create("div", "legend");
 	div.innerHTML += "<h4>Risk levels</h4>";
-	div.innerHTML += '<i style="background: #690000"></i><span>Level 5</span><br>';
-	div.innerHTML += '<i style="background: #e22b00""></i><span>Level 4</span><br>';
-	div.innerHTML += '<i style="background: #ffbc48"></i><span>Level 3</span><br>';
+	div.innerHTML += '<i style="background: #690000"></i><span>High risk</span><br>';
+	div.innerHTML += '<i style="background: #e22b00""></i><span>Medium risk</span><br>';
+	div.innerHTML += '<i style="background: #ffbc48"></i><span>Low risk</span><br>';
 	//div.innerHTML += '<i style="background: #ff8080"></i><span>Level 2</span><br>';
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
@@ -86,13 +86,13 @@ legend_routes.onAdd = function (map) {
 		div.innerHTML += '<i style="background: #71007c"></i><span>None</span><br>';
 	}
 	if(mymap.hasLayer(class5Layer)) {
-		div.innerHTML += '<i style="background: #1d37c1""></i><span>Level 5</span><br>';
+		div.innerHTML += '<i style="background: #1d37c1""></i><span>High risk</span><br>';
 	}
 	if(mymap.hasLayer(class4Layer)) {
-		div.innerHTML += '<i style="background: #2896d7"></i><span>Level 4</span><br>';
+		div.innerHTML += '<i style="background: #2896d7"></i><span>Medium risk</span><br>';
 	}
 	if(mymap.hasLayer(class3Layer)) {
-		div.innerHTML += '<i style="background: #52efba"></i><span>Level 3</span><br>';
+		div.innerHTML += '<i style="background: #52efba"></i><span>Low risk</span><br>';
 	}
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
@@ -104,7 +104,7 @@ mymap.on('overlayremove', function (eventLayer) {
 	if (eventLayer.name === 'Risk Areas') {
 		this.removeControl(legend_risk);
 	}
-	if (eventLayer.name === 'none' || eventLayer.name === 'level 5' || eventLayer.name === 'level 4' || eventLayer.name === 'level 3') {
+	if (eventLayer.name === 'Shortest route' || eventLayer.name === 'High risk avoiding route' || eventLayer.name === 'Medium risk avoiding route' || eventLayer.name === 'Low risk avoiding route') {
 		this.removeControl(legend_routes);
 		this.addControl(legend_routes);
 		if (!mymap.hasLayer(class3Layer) && !mymap.hasLayer(class4Layer) && !mymap.hasLayer(class5Layer) && !mymap.hasLayer(noneLayer)) {
@@ -118,7 +118,7 @@ mymap.on('overlayadd', function (eventLayer) {
 		this.addControl(legend_risk);
 		accidentMarkers.bringToFront();
 	}
-	if (eventLayer.name === 'none' || eventLayer.name === 'level 5' || eventLayer.name === 'level 4' || eventLayer.name === 'level 3') {
+	if (eventLayer.name === 'Shortest route' || eventLayer.name === 'High risk avoiding route' || eventLayer.name === 'Medium risk avoiding route' || eventLayer.name === 'Low risk avoiding route') {
 		this.removeControl(legend_routes);
 		this.addControl(legend_routes);
 	}
@@ -189,18 +189,18 @@ addToMap(class3, areaLayer, "#ffbc48")
 //addToMap(class1, areaLayer, "#ff8080")
 
 /**
- * function to request the risk avoiding routes from OpenRouteService. 
- * @param {*} profile 
- * @param {*} data 
- * @param {*} risk 
+ * function to request the risk avoiding routes from OpenRouteService.
+ * @param {*} profile
+ * @param {*} data
+ * @param {*} risk
  */
 function requestDatafromOpenRouteService(profile, data, risk) {
 	var route;
 
-	// if there is a certain risk which should be avoided, the avoid poylgons option is added to the request data 
+	// if there is a certain risk which should be avoided, the avoid poylgons option is added to the request data
 	if (risk !== "none") {
 		data.options = {
-			"avoid_polygons": eval(risk) // convert string to variable 
+			"avoid_polygons": eval(risk) // convert string to variable
 		};
 	}
 
@@ -227,10 +227,10 @@ function requestDatafromOpenRouteService(profile, data, risk) {
 }
 
 /**
- * function which is excecuted when the submit button is hit. 
- * - start and destination are geocoded by the openrouteservie 
- * - for each of the risk classes the corresponding route is recieved from openrouteservice 
- * - each of the routes is added to the layer control 
+ * function which is excecuted when the submit button is hit.
+ * - start and destination are geocoded by the openrouteservie
+ * - for each of the risk classes the corresponding route is recieved from openrouteservice
+ * - each of the routes is added to the layer control
  * - by calling the function addRouteToMap, all routes and corresponding buffers and markers are added to the map
  */
 $("#submit").click(function (e) {
@@ -242,7 +242,7 @@ $("#submit").click(function (e) {
 	document.getElementById("overlay").offsetHeight;
 
 	// delete all highlighting, so that there is no intital highlighting if the transportation type is changed
-	removeHighlight(accidents)
+	removeHighlight(accidents);
 
 	// needed to initialize each of the layer
 	noneBuffered = undefined;
@@ -297,20 +297,20 @@ $("#submit").click(function (e) {
 		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
 
-		// if there is not already a layer selection for the routes, it is added 
+		// if there is not already a layer selection for the routes, it is added
 		var availableLayersInLayerControl = layersControl.getOverlaysNames();
 
-		if (availableLayersInLayerControl.find(element => element === "none") === undefined) {
-			layersControl.addOverlay(noneLayer, "none");
+		if (availableLayersInLayerControl.find(element => element === "Shortest route") === undefined) {
+			layersControl.addOverlay(noneLayer, "Shortest route");
 		}
-		if (availableLayersInLayerControl.find(element => element === "level 5") === undefined) {
-			layersControl.addOverlay(class5Layer, "level 5");
+		if (availableLayersInLayerControl.find(element => element === "High risk avoiding route") === undefined) {
+			layersControl.addOverlay(class5Layer, "High risk avoiding route");
 		}
-		if (availableLayersInLayerControl.find(element => element === "level 4") === undefined) {
-			layersControl.addOverlay(class4Layer, "level 4");
+		if (availableLayersInLayerControl.find(element => element === "Medium risk avoiding route") === undefined) {
+			layersControl.addOverlay(class4Layer, "Medium risk avoiding route");
 		}
-		if (availableLayersInLayerControl.find(element => element === "level 3") === undefined) {
-			layersControl.addOverlay(class3Layer, "level 3");
+		if (availableLayersInLayerControl.find(element => element === "Low risk avoiding route") === undefined) {
+			layersControl.addOverlay(class3Layer, "Low risk avoiding route");
 		}
 
 		sameRoutes=false
@@ -332,7 +332,7 @@ $("#submit").click(function (e) {
 		}
 
 
-		// if there is no route available, it is not added to the map and is not available in the layer control 
+		// if there is no route available, it is not added to the map and is not available in the layer control
 		if (routes[0].statusText === undefined) {
 			noneBuffered = turf.buffer(routes[0], 50, { units: 'meters' });
 			nonePointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
@@ -379,7 +379,7 @@ $("#submit").click(function (e) {
 			hide("level3")
 		}
 
-		// set the map focus to the route which is not avoiding any risk areas 
+		// set the map focus to the route which is not avoiding any risk areas
 		let bbox = [
 			[routes[0].bbox[1], routes[0].bbox[0]],
 			[routes[0].bbox[3], routes[0].bbox[2]]
@@ -404,11 +404,11 @@ $("#submit").click(function (e) {
 //addToMap(class2, areaLayer, "#ff8080")
 
 /**
- * function to add the routes and the corresponding buffers and markers to the map. 
- * The markers are added to the map by calling the function navigationInfo. 
+ * function to add the routes and the corresponding buffers and markers to the map.
+ * The markers are added to the map by calling the function navigationInfo.
  * In the final version buffers and navigation are commented out, because they do not fit to the user story of the application.
  * @param {*} route
- * @param {*} layer 
+ * @param {*} layer
  */
 function addRouteToMap(route, layer) {
 
@@ -422,7 +422,7 @@ function addRouteToMap(route, layer) {
 		//addToMap(noneBuffered, noneLayer, "#00c804");
 		//navigationInfo(route, layer);
 
-		var checkedLayers = layersControl.getOverlays();  
+		var checkedLayers = layersControl.getOverlays();
 		// the noneLayer is shown initially, thats why the highlighting is not activated as usually by the user (function mymap.on('overlayadd', function (eo))
 		if (routeLayerSelectionActive === false && checkedLayers["none"] === true) {
 			routeLayerSelectionActive = true;
@@ -455,9 +455,9 @@ function addRouteToMap(route, layer) {
 }
 
 /**
- * function to add navigation information to the routes by corresponding markers and popups. 
- * @param {*} route 
- * @param {*} layer 
+ * function to add navigation information to the routes by corresponding markers and popups.
+ * @param {*} route
+ * @param {*} layer
  */
 function navigationInfo(route, layer) {
 
@@ -496,37 +496,37 @@ function navigationInfo(route, layer) {
 
 }
 
-// event if one layer is activated in the layers control 
+// event if one layer is activated in the layers control
 mymap.on('overlayadd', function (eo) {
 	HiglightingForCheckedLayersInLayerControl(eo.name, true);
 });
 
 /**
- * function to highlight the points inside the buffer of a certain route, if the layer is activated in the layers control. 
+ * function to highlight the points inside the buffer of a certain route, if the layer is activated in the layers control.
  */
 function HiglightingForCheckedLayersInLayerControl(layerName, show) {
 
-	if (layerName === 'none') {
+	if (layerName === 'Shortest route') {
 		highlight(nonePointsInsidePolygon);
 		if(show){
 			$('#none').tab("show");
 		}
 	}
-	if (layerName === 'level 5') {
+	if (layerName === 'High risk avoiding route') {
 		highlight(class5PointsInsidePolygon);
 		if(show){
 			$('#level5').tab("show");
 		}
 
 	}
-	if (layerName === 'level 4') {
+	if (layerName === 'Medium risk avoiding route') {
 		highlight(class4PointsInsidePolygon);
 		if(show){
 			$('#level4').tab("show");
 		}
 
 	}
-	if (layerName === 'level 3') {
+	if (layerName === 'Low risk avoiding route') {
 		highlight(class3PointsInsidePolygon);
 		if(show){
 			$('#level3').tab("show");
@@ -535,46 +535,46 @@ function HiglightingForCheckedLayersInLayerControl(layerName, show) {
 	}
 }
 
-// event if one layer is deactivated in the layers control 
+// event if one layer is deactivated in the layers control
 mymap.on('overlayremove ', function (eo) {
 
 	RemoveHighlightingForUncheckedLayersInLayerControl(eo.name);
-	var checkedLayers = layersControl.getOverlays(); // check if there are points which need to be highlighted again (needed because points often on same route) 
+	var checkedLayers = layersControl.getOverlays(); // check if there are points which need to be highlighted again (needed because points often on same route)
 	let shown=false;
-	if (checkedLayers["none"] === true) {
-		HiglightingForCheckedLayersInLayerControl('none', !shown);
+	if (checkedLayers["Shortest route"] === true) {
+		HiglightingForCheckedLayersInLayerControl('Shortest route', !shown);
 		shown=true
 
 	}
-	if (checkedLayers["level 5"] === true) {
+	if (checkedLayers["High risk avoiding route"] === true) {
 
-		HiglightingForCheckedLayersInLayerControl('level 5', !shown);
+		HiglightingForCheckedLayersInLayerControl('High risk avoiding route', !shown);
 		shown=true
 	}
-	if (checkedLayers["level 4"] === true) {
-		HiglightingForCheckedLayersInLayerControl('level 4', !shown);
+	if (checkedLayers["Medium risk avoiding route"] === true) {
+		HiglightingForCheckedLayersInLayerControl('Medium risk avoiding route', !shown);
 		shown=true
 	}
-	if (checkedLayers["level 3"] === true) {
-		HiglightingForCheckedLayersInLayerControl('level 3', !shown);
+	if (checkedLayers["Low risk avoiding route"] === true) {
+		HiglightingForCheckedLayersInLayerControl('Low risk avoiding route', !shown);
 
 	}
 });
 
 /**
- * function to remove the highlighting of the points inside the buffer of a certain route, if the layer is disabled in the layers control. 
+ * function to remove the highlighting of the points inside the buffer of a certain route, if the layer is disabled in the layers control.
  */
 function RemoveHighlightingForUncheckedLayersInLayerControl(layerName) {
-	if (layerName === 'none') {
+	if (layerName === 'Shortest route') {
 		removeHighlight(nonePointsInsidePolygon);
 	}
-	if (layerName === 'level 5') {
+	if (layerName === 'High risk avoiding route') {
 		removeHighlight(class5PointsInsidePolygon);
 	}
-	if (layerName === 'level 4') {
+	if (layerName === 'Medium risk avoiding route') {
 		removeHighlight(class4PointsInsidePolygon);
 	}
-	if (layerName === 'level 3') {
+	if (layerName === 'Low risk avoiding route') {
 		removeHighlight(class3PointsInsidePolygon);
 	}
 }
