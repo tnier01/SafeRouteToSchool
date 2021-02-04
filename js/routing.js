@@ -1,3 +1,4 @@
+
 var noneBuffered;
 var class5Buffered;
 var class4Buffered;
@@ -99,6 +100,71 @@ legend_routes.onAdd = function (map) {
 	return div;
 };
 
+function get2D( num ) {
+    return ( num.toString().length < 2 ? "0"+num : num ).toString();
+}
+
+function convertTime(time){
+	hours = Math.floor(time / 3600)
+	minutes = Math.floor((time - hours*3600) / 60)
+	seconds = Math.round(time - hours*3600 - minutes*60)
+	return get2D(hours)+":"+get2D(minutes)+":"+get2D(seconds)
+}
+
+
+function convertlenght(length){
+	length= length/10;
+	length= Math.round(length);
+	length= length/100
+	return length;
+}
+
+function addInformation (information) {
+
+	console.log(information)
+
+	var div = document.getElementById("info");
+	div.innerHTML = "<span>Risk Level, Duration, Length</span> <br/>";
+
+	var color;
+
+		if(information[0]!= "null"){
+		var time = information[0].features[0].properties.summary.duration
+		var length = information[0].features[0].properties.summary.duration
+		time= convertTime(time)
+		length =convertlenght(length)
+		var url = createLink(information[0])
+
+		div.innerHTML += '<i class="color" style="background: #71007c"></i><span>None &nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
+		}
+		if(information[1]!= "null"){
+			var time = information[1].features[0].properties.summary.duration
+			var length = information[1].features[0].properties.summary.duration
+			time= convertTime(time)
+			length =convertlenght(length)
+			var url = createLink(information[1])
+		div.innerHTML += '<i class="color" style="background: #1d37c1""></i><span>Level 5</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
+		}
+		if(information[2]!= "null"){
+			var time = information[2].features[0].properties.summary.duration
+			var length = information[2].features[0].properties.summary.duration
+			time= convertTime(time)
+			length =convertlenght(length)
+			var url = createLink(information[2])
+		div.innerHTML += '<i class="color"style="background: #2896d7"></i><span>Level 4</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
+		}
+		if(information[3]!= "null"){
+			var time = information[3].features[0].properties.summary.duration
+			var length = information[3].features[0].properties.summary.duration
+			time= convertTime(time)
+			length =convertlenght(length)
+			var url = createLink(information[3])
+		div.innerHTML += '<i class="color" style="background: #52efba"></i><span>Level 3</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
+		}
+	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
+
+};
+
 
 mymap.on('overlayremove', function (eventLayer) {
 	if (eventLayer.name === 'Risk Areas') {
@@ -185,6 +251,7 @@ addToMap(class4, areaLayer, "#e22b00")
 addToMap(class3, areaLayer, "#ffbc48")
 
 
+
 // addToMap(class2, areaLayer, "#ff8080")
 //addToMap(class1, areaLayer, "#ff8080")
 
@@ -218,9 +285,6 @@ function requestDatafromOpenRouteService(profile, data, risk) {
 		},
 		error: function (err) {
 			route = err;
-			$("#info").show();
-			$("#info").text(err.responseText);
-			$("#info").delay("10000").fadeOut();
 		}
 	});
 	return route;
@@ -292,10 +356,14 @@ $("#submit").click(function (e) {
 		}
 
 		var routes = [];
+		
 		routes.push(requestDatafromOpenRouteService(profile, data, "none"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class5"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
+		var routes2 = routes.slice();
+
+		
 
 		// if there is not already a layer selection for the routes, it is added
 		var availableLayersInLayerControl = layersControl.getOverlaysNames();
@@ -331,8 +399,8 @@ $("#submit").click(function (e) {
 			}
 		}
 
-
-		// if there is no route available, it is not added to the map and is not available in the layer control
+		
+		// if there is no route available, it is not added to the map and is not available in the layer control 
 		if (routes[0].statusText === undefined) {
 			noneBuffered = turf.buffer(routes[0], 50, { units: 'meters' });
 			nonePointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
@@ -343,6 +411,7 @@ $("#submit").click(function (e) {
 		else {
 			layersControl.removeLayer(noneLayer);
 			hide("none")
+			routes2[0]= "null"
 		}
 		if (routes[1].statusText === undefined && sameRoutes===false) {
 			class5Buffered = turf.buffer(routes[1], 50, { units: 'meters' });
@@ -354,6 +423,7 @@ $("#submit").click(function (e) {
 		else {
 			layersControl.removeLayer(class5Layer);
 			hide("level5")
+			routes2[1]= "null"
 		}
 		if (routes[2].statusText === undefined && sameRoutes===false) {
 
@@ -366,6 +436,7 @@ $("#submit").click(function (e) {
 		else {
 			layersControl.removeLayer(class4Layer);
 			hide("level4")
+			routes2[2]= "null"
 		}
 		if (routes[3].statusText === undefined&& sameRoutes===false ) {
 			class3Buffered = turf.buffer(routes[3], 50, { units: 'meters' });
@@ -377,7 +448,15 @@ $("#submit").click(function (e) {
 		else {
 			layersControl.removeLayer(class3Layer);
 			hide("level3")
+			routes2[3]= "null"
 		}
+
+		if(sameRoutes){
+			routes2[1]= "null"
+			routes2[2]= "null"
+			routes2[3]= "null"
+		}
+		addInformation(routes2)
 
 		// set the map focus to the route which is not avoiding any risk areas
 		let bbox = [
@@ -705,4 +784,38 @@ function toggle_visibility(divId, buttonId) {
 	}
 }
 
+
+function createLink(route){
+	let profile = $("input[name='transport']:checked").val();
+	let segments = route.features[0].properties.segments
+	let transport;
+	if (profile == "driving-car"){
+		transport = "driving"
+	}
+	else if (profile == "cycling-regular"){
+		transport = "bicycling"
+	}
+	else if (profile == "foot-walking"){
+		transport = "walking"
+	}
+
+
+	origin = route.features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][0]
+	
+	max= segments[0].steps.length-1
+	console.log(max)
+	destination = route.features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][0]
+
+	var waypoints= "";
+	for (var i =0; i< max; i++){
+		waypoints += route.features[0].geometry.coordinates[segments[0].steps[i].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[i].way_points[0]][0] +"%7C"
+	}
+
+	console.log(waypoints)
+	waypoints = waypoints.substring(0, waypoints.length - 3);
+	console.log(waypoints)
+	var test = "https://www.google.com/maps/dir/?api=1&origin=" + origin +"&destination="+ destination + "&travelmode=" + transport +"&waypoints=" + waypoints
+
+	return(test)
+}
 
