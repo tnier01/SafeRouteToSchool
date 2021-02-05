@@ -135,7 +135,7 @@ function addInformation (information) {
 		length =convertlenght(length)
 		var url = createLink(information[0])
 
-		div.innerHTML += '<i class="color" style="background: #71007c"></i><span>None &nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
+		div.innerHTML += '<i class="color" style="background: #71007c"></i><span>Shortest route</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
 		}
 		if(information[1]!= "null"){
 			var time = information[1].features[0].properties.summary.duration
@@ -143,7 +143,7 @@ function addInformation (information) {
 			time= convertTime(time)
 			length =convertlenght(length)
 			var url = createLink(information[1])
-		div.innerHTML += '<i class="color" style="background: #1d37c1""></i><span>Level 5</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
+		div.innerHTML += '<i class="color" style="background: #1d37c1""></i><span>High risk &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
 		}
 		if(information[2]!= "null"){
 			var time = information[2].features[0].properties.summary.duration
@@ -151,7 +151,7 @@ function addInformation (information) {
 			time= convertTime(time)
 			length =convertlenght(length)
 			var url = createLink(information[2])
-		div.innerHTML += '<i class="color"style="background: #2896d7"></i><span>Level 4</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
+		div.innerHTML += '<i class="color"style="background: #2896d7"></i><span>Medium risk&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
 		}
 		if(information[3]!= "null"){
 			var time = information[3].features[0].properties.summary.duration
@@ -159,7 +159,7 @@ function addInformation (information) {
 			time= convertTime(time)
 			length =convertlenght(length)
 			var url = createLink(information[3])
-		div.innerHTML += '<i class="color" style="background: #52efba"></i><span>Level 3</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
+		div.innerHTML += '<i class="color" style="background: #52efba"></i><span>Low risk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
 		}
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
