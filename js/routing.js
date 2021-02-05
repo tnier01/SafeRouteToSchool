@@ -30,7 +30,7 @@ mymap.on('click', function (e) {
 	});
 });
 
-mymap.setMinZoom(10);
+mymap.setMinZoom(12);
 
 /*
 There is a layer for the risk area, and for each of the avoiding risk area routes. 
@@ -50,11 +50,11 @@ var class3Layer = new L.LayerGroup();
 
 var baseLayers = {
 	"OpenStreetMap": osmlayer,
-	"Esri World Imagery": Esri_WorldImagery
+	"Esri world imagery": Esri_WorldImagery
 };
 
 var layersControl = L.control.layers(baseLayers, null, { collapsed: false }).addTo(mymap);
-layersControl.addOverlay(areaLayer, "Risk Areas");
+layersControl.addOverlay(areaLayer, "Risk areas");
 
 var legend_risk = L.control({position: 'bottomright'});
 
@@ -404,6 +404,7 @@ $("#submit").click(function (e) {
 		if (routes[0].statusText === undefined) {
 			noneBuffered = turf.buffer(routes[0], 50, { units: 'meters' });
 			nonePointsInsidePolygon = proofPointsInPolygon(noneBuffered.features[0]);
+			highlight(nonePointsInsidePolygon)
 			addRouteToMap(routes[0], "noneLayer");
 			createChart(nonePointsInsidePolygon, 0)
 			show("none")

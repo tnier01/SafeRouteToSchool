@@ -51,7 +51,7 @@ accidentMarkers = L.geoJSON(accidents, {
     onEachFeature: popup
 }).addTo(mymap);
 
-layersControl.addOverlay(accidentMarkers, "Accident Markers");
+layersControl.addOverlay(accidentMarkers, "Accident markers");
 
 chartW= []
 chartC= []
