@@ -63,7 +63,7 @@ var startStop = new L.LayerGroup();
 
 var baseLayers = {
 	"OpenStreetMap": osmlayer,
-	"Esri world imagery": Esri_WorldImagery
+	"Esri World Imagery": Esri_WorldImagery
 };
 
 var layersControl = L.control.layers(baseLayers, null, { collapsed: false }).addTo(mymap);

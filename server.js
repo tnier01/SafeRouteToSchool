@@ -24,8 +24,8 @@ app.get('/', (req, res) => {
 app.get('/howto', (req, res) => {
     res.sendFile(__dirname + '/HowTo.html')
 })
-app.get('/impressum', (req, res) => {
-    res.sendFile(__dirname + '/Impressum.html')
+app.get('/imprint', (req, res) => {
+    res.sendFile(__dirname + '/imprint.html')
 })
 
 const port = 3000;
