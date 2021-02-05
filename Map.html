@@ -16,6 +16,8 @@
 	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
 		integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
+	<link rel="stylesheet" href="/markers/leaflet.awesome-markers.css"></script>
+
 	<script src="/leaflet/leaflet.js"></script>
 	<script src="jquery/jquery.min.js"></script>
 	<script src="chart.js/chart.js"></script>
@@ -27,13 +29,16 @@
 
 	<script src="/jquery/jquery.min.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
+	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+	<script src="/markers/leaflet.awesome-markers.min.js"></script>
 	<script src="/turf/turf.min.js"></script>
 	<script src="/private/tokens.js"></script>
 	<script src="data/desnsityAreas.js"></script>
 	<script src="/js/createPolygons.js"></script>
 	<script src="/js/autocomplete.js"></script>
 	<script src="data/accidents.js"></script>
+
 
 
 
@@ -93,7 +98,7 @@
 							</tr>
 							<tr>
 								<td><button id="submit" class="button btn btn-primary">Submit</button></td>
-								<td></td>
+								<td><input type="checkbox" name="markers" value="higlight">  Highlight start and finish&nbsp;&nbsp;</td>
 							</tr>
 						</table>
 						</div>

@@ -9,6 +9,18 @@ var class4PointsInsidePolygon;
 var class3PointsInsidePolygon;
 var routeLayerSelectionActive = false;
 
+var startIcon  = L.AwesomeMarkers.icon({
+	icon: 'play',
+	markerColor: 'blue',
+	prefix: 'fa'
+  });
+
+var stopIcon = L.AwesomeMarkers.icon({
+	icon: 'flag',
+	markerColor: 'blue',
+	prefix: 'fa'
+  });
+
 mymap.on('click', function (e) {
 	var container = L.DomUtil.create('div'),
 		startBtn = createButton('Start', container),
@@ -47,6 +59,7 @@ var class4Layer = new L.LayerGroup();
 //class4Layer.addTo(mymap); commented out as it is later added to map
 var class3Layer = new L.LayerGroup();
 //class3Layer.addTo(mymap); commented out as it is later added to map
+var startStop = new L.LayerGroup();
 
 var baseLayers = {
 	"OpenStreetMap": osmlayer,
@@ -56,7 +69,7 @@ var baseLayers = {
 var layersControl = L.control.layers(baseLayers, null, { collapsed: false }).addTo(mymap);
 layersControl.addOverlay(areaLayer, "Risk areas");
 
-var legend_risk = L.control({position: 'bottomright'});
+var legend_risk = L.control({ position: 'bottomright' });
 
 legend_risk.onAdd = function (map) {
 
@@ -72,8 +85,9 @@ legend_risk.onAdd = function (map) {
 };
 
 legend_risk.addTo(mymap);
+startStop.addTo(mymap)
 
-var legend_routes = L.control({position: 'bottomright'});
+var legend_routes = L.control({ position: 'bottomright' });
 
 legend_routes.onAdd = function (map) {
 
@@ -83,16 +97,16 @@ legend_routes.onAdd = function (map) {
 
 	var color;
 
-	if(mymap.hasLayer(noneLayer)) {
+	if (mymap.hasLayer(noneLayer)) {
 		div.innerHTML += '<i style="background: #71007c"></i><span>None</span><br>';
 	}
-	if(mymap.hasLayer(class5Layer)) {
+	if (mymap.hasLayer(class5Layer)) {
 		div.innerHTML += '<i style="background: #1d37c1""></i><span>High risk</span><br>';
 	}
-	if(mymap.hasLayer(class4Layer)) {
+	if (mymap.hasLayer(class4Layer)) {
 		div.innerHTML += '<i style="background: #2896d7"></i><span>Medium risk</span><br>';
 	}
-	if(mymap.hasLayer(class3Layer)) {
+	if (mymap.hasLayer(class3Layer)) {
 		div.innerHTML += '<i style="background: #52efba"></i><span>Low risk</span><br>';
 	}
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
@@ -100,26 +114,26 @@ legend_routes.onAdd = function (map) {
 	return div;
 };
 
-function get2D( num ) {
-    return ( num.toString().length < 2 ? "0"+num : num ).toString();
+function get2D(num) {
+	return (num.toString().length < 2 ? "0" + num : num).toString();
 }
 
-function convertTime(time){
+function convertTime(time) {
 	hours = Math.floor(time / 3600)
-	minutes = Math.floor((time - hours*3600) / 60)
-	seconds = Math.round(time - hours*3600 - minutes*60)
-	return get2D(hours)+":"+get2D(minutes)+":"+get2D(seconds)
+	minutes = Math.floor((time - hours * 3600) / 60)
+	seconds = Math.round(time - hours * 3600 - minutes * 60)
+	return get2D(hours) + ":" + get2D(minutes) + ":" + get2D(seconds)
 }
 
 
-function convertlenght(length){
-	length= length/10;
-	length= Math.round(length);
-	length= length/100
+function convertlenght(length) {
+	length = length / 10;
+	length = Math.round(length);
+	length = length / 100
 	return length;
 }
 
-function addInformation (information) {
+function addInformation(information) {
 
 	console.log(information)
 
@@ -128,39 +142,39 @@ function addInformation (information) {
 
 	var color;
 
-		if(information[0]!= "null"){
+	if (information[0] != "null") {
 		var time = information[0].features[0].properties.summary.duration
 		var length = information[0].features[0].properties.summary.duration
-		time= convertTime(time)
-		length =convertlenght(length)
+		time = convertTime(time)
+		length = convertlenght(length)
 		var url = createLink(information[0])
 
-		div.innerHTML += '<i class="color" style="background: #71007c"></i><span>Shortest route</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
-		}
-		if(information[1]!= "null"){
-			var time = information[1].features[0].properties.summary.duration
-			var length = information[1].features[0].properties.summary.duration
-			time= convertTime(time)
-			length =convertlenght(length)
-			var url = createLink(information[1])
-		div.innerHTML += '<i class="color" style="background: #1d37c1""></i><span>High risk &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
-		}
-		if(information[2]!= "null"){
-			var time = information[2].features[0].properties.summary.duration
-			var length = information[2].features[0].properties.summary.duration
-			time= convertTime(time)
-			length =convertlenght(length)
-			var url = createLink(information[2])
-		div.innerHTML += '<i class="color"style="background: #2896d7"></i><span>Medium risk&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
-		}
-		if(information[3]!= "null"){
-			var time = information[3].features[0].properties.summary.duration
-			var length = information[3].features[0].properties.summary.duration
-			time= convertTime(time)
-			length =convertlenght(length)
-			var url = createLink(information[3])
-		div.innerHTML += '<i class="color" style="background: #52efba"></i><span>Low risk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' +time +'<i class="fas fa-road">'+length + ' km </i><a target="_blank" href='+url +'>Google Maps</a><br>';
-		}
+		div.innerHTML += '<i class="color" style="background: #71007c"></i><span>Shortest route</span> <i class="fas fa-clock"></i>' + time + '<i class="fas fa-road">' + length + ' km </i><a target="_blank" href=' + url + '>Google Maps</a><br>';
+	}
+	if (information[1] != "null") {
+		var time = information[1].features[0].properties.summary.duration
+		var length = information[1].features[0].properties.summary.duration
+		time = convertTime(time)
+		length = convertlenght(length)
+		var url = createLink(information[1])
+		div.innerHTML += '<i class="color" style="background: #1d37c1""></i><span>High risk &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' + time + '<i class="fas fa-road">' + length + ' km </i><a target="_blank" href=' + url + '>Google Maps</a><br>';
+	}
+	if (information[2] != "null") {
+		var time = information[2].features[0].properties.summary.duration
+		var length = information[2].features[0].properties.summary.duration
+		time = convertTime(time)
+		length = convertlenght(length)
+		var url = createLink(information[2])
+		div.innerHTML += '<i class="color"style="background: #2896d7"></i><span>Medium risk&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' + time + '<i class="fas fa-road">' + length + ' km </i><a target="_blank" href=' + url + '>Google Maps</a><br>';
+	}
+	if (information[3] != "null") {
+		var time = information[3].features[0].properties.summary.duration
+		var length = information[3].features[0].properties.summary.duration
+		time = convertTime(time)
+		length = convertlenght(length)
+		var url = createLink(information[3])
+		div.innerHTML += '<i class="color" style="background: #52efba"></i><span>Low risk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <i class="fas fa-clock"></i>' + time + '<i class="fas fa-road">' + length + ' km </i><a target="_blank" href=' + url + '>Google Maps</a><br>';
+	}
 	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
 };
@@ -201,15 +215,15 @@ function createButton(label, container, id) {
 
 function addToMap(geojson, LayerGroup, color) {
 	//LayerGroup.clearLayers();
-    let stroke = true;
-    if(LayerGroup == areaLayer) {
-        stroke = false;
-    }
+	let stroke = true;
+	if (LayerGroup == areaLayer) {
+		stroke = false;
+	}
 	let geometry = L.geoJson(geojson, {
 		"color": color,
 		fillOpacity: 0.6,
 		stroke: stroke,
-        weight: 5
+		weight: 5
 		//dashArray: '8 12',
 	});
 	LayerGroup.addLayer(geometry);
@@ -356,14 +370,14 @@ $("#submit").click(function (e) {
 		}
 
 		var routes = [];
-		
+
 		routes.push(requestDatafromOpenRouteService(profile, data, "none"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class5"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class4"));
 		routes.push(requestDatafromOpenRouteService(profile, data, "class3"));
 		var routes2 = routes.slice();
 
-		
+
 
 		// if there is not already a layer selection for the routes, it is added
 		var availableLayersInLayerControl = layersControl.getOverlaysNames();
@@ -381,7 +395,7 @@ $("#submit").click(function (e) {
 			layersControl.addOverlay(class3Layer, "Low risk avoiding route");
 		}
 
-		sameRoutes=false
+		sameRoutes = false
 
 		// if all routes are the same, only the none route is shown
 		if (routes[0].statusText === undefined && routes[1].statusText === undefined && routes[2].statusText === undefined && routes[3].statusText === undefined) {
@@ -399,7 +413,7 @@ $("#submit").click(function (e) {
 			}
 		}
 
-		
+
 		// if there is no route available, it is not added to the map and is not available in the layer control 
 		if (routes[0].statusText === undefined) {
 			noneBuffered = turf.buffer(routes[0], 50, { units: 'meters' });
@@ -412,50 +426,50 @@ $("#submit").click(function (e) {
 		else {
 			layersControl.removeLayer(noneLayer);
 			hide("none")
-			routes2[0]= "null"
+			routes2[0] = "null"
 		}
-		if (routes[1].statusText === undefined && sameRoutes===false) {
+		if (routes[1].statusText === undefined && sameRoutes === false) {
 			class5Buffered = turf.buffer(routes[1], 50, { units: 'meters' });
 			class5PointsInsidePolygon = proofPointsInPolygon(class5Buffered.features[0]);
 			addRouteToMap(routes[1], "class5Layer");
-			createChart(class5PointsInsidePolygon,5)
+			createChart(class5PointsInsidePolygon, 5)
 			show("level5")
 		}
 		else {
 			layersControl.removeLayer(class5Layer);
 			hide("level5")
-			routes2[1]= "null"
+			routes2[1] = "null"
 		}
-		if (routes[2].statusText === undefined && sameRoutes===false) {
+		if (routes[2].statusText === undefined && sameRoutes === false) {
 
 			class4Buffered = turf.buffer(routes[2], 50, { units: 'meters' });
 			class4PointsInsidePolygon = proofPointsInPolygon(class4Buffered.features[0]);
-			createChart(class4PointsInsidePolygon,4)
+			createChart(class4PointsInsidePolygon, 4)
 			addRouteToMap(routes[2], "class4Layer");
 			show("level4")
 		}
 		else {
 			layersControl.removeLayer(class4Layer);
 			hide("level4")
-			routes2[2]= "null"
+			routes2[2] = "null"
 		}
-		if (routes[3].statusText === undefined&& sameRoutes===false ) {
+		if (routes[3].statusText === undefined && sameRoutes === false) {
 			class3Buffered = turf.buffer(routes[3], 50, { units: 'meters' });
 			class3PointsInsidePolygon = proofPointsInPolygon(class3Buffered.features[0]);
-			createChart(class3PointsInsidePolygon,3)
+			createChart(class3PointsInsidePolygon, 3)
 			addRouteToMap(routes[3], "class3Layer");
 			show("level3")
 		}
 		else {
 			layersControl.removeLayer(class3Layer);
 			hide("level3")
-			routes2[3]= "null"
+			routes2[3] = "null"
 		}
 
-		if(sameRoutes){
-			routes2[1]= "null"
-			routes2[2]= "null"
-			routes2[3]= "null"
+		if (sameRoutes) {
+			routes2[1] = "null"
+			routes2[2] = "null"
+			routes2[3] = "null"
 		}
 		addInformation(routes2)
 
@@ -469,7 +483,36 @@ $("#submit").click(function (e) {
 		$('#none').tab("show");
 		hide("overlay")
 
-        legend_routes.addTo(mymap);
+		startStop.clearLayers()
+
+		var checkboxes = document.getElementsByName("markers");
+		if (checkboxes[0].checked) {
+			let segments = routes2[0].features[0].properties.segments
+			console.log(routes2[0])
+
+			legend_routes.addTo(mymap);
+
+			origin = [routes2[0].features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][1], routes2[0].features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][0]]
+
+			max = segments[0].steps.length - 1
+			destination = [routes2[0].features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][1], routes2[0].features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][0]]
+
+			markerOrigin = L.marker(origin, {
+				"riseOnHover": true,
+				icon: startIcon
+			});
+
+			markerDestination = L.marker(destination, {
+				"riseOnHover": true,
+				icon: stopIcon
+			});
+
+			startStop.addLayer(markerOrigin)
+			startStop.addLayer(markerDestination)
+		}
+
+
+
 
 	} else {
 		alert("please enter valid start and destination");
@@ -588,27 +631,27 @@ function HiglightingForCheckedLayersInLayerControl(layerName, show) {
 
 	if (layerName === 'Shortest route') {
 		highlight(nonePointsInsidePolygon);
-		if(show){
+		if (show) {
 			$('#none').tab("show");
 		}
 	}
 	if (layerName === 'High risk avoiding route') {
 		highlight(class5PointsInsidePolygon);
-		if(show){
+		if (show) {
 			$('#level5').tab("show");
 		}
 
 	}
 	if (layerName === 'Medium risk avoiding route') {
 		highlight(class4PointsInsidePolygon);
-		if(show){
+		if (show) {
 			$('#level4').tab("show");
 		}
 
 	}
 	if (layerName === 'Low risk avoiding route') {
 		highlight(class3PointsInsidePolygon);
-		if(show){
+		if (show) {
 			$('#level3').tab("show");
 		}
 
@@ -620,20 +663,20 @@ mymap.on('overlayremove ', function (eo) {
 
 	RemoveHighlightingForUncheckedLayersInLayerControl(eo.name);
 	var checkedLayers = layersControl.getOverlays(); // check if there are points which need to be highlighted again (needed because points often on same route)
-	let shown=false;
+	let shown = false;
 	if (checkedLayers["Shortest route"] === true) {
 		HiglightingForCheckedLayersInLayerControl('Shortest route', !shown);
-		shown=true
+		shown = true
 
 	}
 	if (checkedLayers["High risk avoiding route"] === true) {
 
 		HiglightingForCheckedLayersInLayerControl('High risk avoiding route', !shown);
-		shown=true
+		shown = true
 	}
 	if (checkedLayers["Medium risk avoiding route"] === true) {
 		HiglightingForCheckedLayersInLayerControl('Medium risk avoiding route', !shown);
-		shown=true
+		shown = true
 	}
 	if (checkedLayers["Low risk avoiding route"] === true) {
 		HiglightingForCheckedLayersInLayerControl('Low risk avoiding route', !shown);
@@ -762,12 +805,12 @@ L.Control.Layers.include({
 function show(id) {
 	var element = document.getElementById(id);
 	element.classList.remove("hideme");
-  }
+}
 
 function hide(id) {
 	var element = document.getElementById(id);
 	element.classList.add("hideme");
-  }
+}
 
 /**
  * function to hide an html div and chane position of corresponding button
@@ -786,37 +829,37 @@ function toggle_visibility(divId, buttonId) {
 }
 
 
-function createLink(route){
+function createLink(route) {
 	let profile = $("input[name='transport']:checked").val();
 	let segments = route.features[0].properties.segments
 	let transport;
-	if (profile == "driving-car"){
+	if (profile == "driving-car") {
 		transport = "driving"
 	}
-	else if (profile == "cycling-regular"){
+	else if (profile == "cycling-regular") {
 		transport = "bicycling"
 	}
-	else if (profile == "foot-walking"){
+	else if (profile == "foot-walking") {
 		transport = "walking"
 	}
 
 
-	origin = route.features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][0]
-	
-	max= segments[0].steps.length-1
-	console.log(max)
-	destination = route.features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][0]
+	origin = route.features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][1] + "," + route.features[0].geometry.coordinates[segments[0].steps[0].way_points[0]][0]
 
-	var waypoints= "";
-	for (var i =0; i< max; i++){
-		waypoints += route.features[0].geometry.coordinates[segments[0].steps[i].way_points[0]][1] +"," +route.features[0].geometry.coordinates[segments[0].steps[i].way_points[0]][0] +"%7C"
+	max = segments[0].steps.length - 1
+	console.log(max)
+	destination = route.features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][1] + "," + route.features[0].geometry.coordinates[segments[0].steps[max].way_points[0]][0]
+
+	var waypoints = "";
+	for (var i = 0; i < max; i++) {
+		waypoints += route.features[0].geometry.coordinates[segments[0].steps[i].way_points[0]][1] + "," + route.features[0].geometry.coordinates[segments[0].steps[i].way_points[0]][0] + "%7C"
 	}
 
 	console.log(waypoints)
 	waypoints = waypoints.substring(0, waypoints.length - 3);
 	console.log(waypoints)
-	var test = "https://www.google.com/maps/dir/?api=1&origin=" + origin +"&destination="+ destination + "&travelmode=" + transport +"&waypoints=" + waypoints
+	var test = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + destination + "&travelmode=" + transport + "&waypoints=" + waypoints
 
-	return(test)
+	return (test)
 }
 
