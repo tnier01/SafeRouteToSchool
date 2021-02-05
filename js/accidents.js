@@ -51,7 +51,7 @@ accidentMarkers = L.geoJSON(accidents, {
     onEachFeature: popup
 }).addTo(mymap);
 
-layersControl.addOverlay(accidentMarkers, "Accident Markers");
+layersControl.addOverlay(accidentMarkers, "Accident markers");
 
 chartW= []
 chartC= []
@@ -219,7 +219,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
-                        maxTicksLimit: 4
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -242,7 +249,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
-                        maxTicksLimit: 4
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -265,7 +279,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
-                        maxTicksLimit: 4
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -288,7 +309,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
-                        maxTicksLimit: 4
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -312,7 +340,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
-                        maxTicksLimit: 4
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -335,7 +370,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
-                        maxTicksLimit: 4
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
