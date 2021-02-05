@@ -1,82 +1,181 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>How To</title>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>How To</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
-<link rel="stylesheet" href="/leaflet/leaflet.css" />
-<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="/leaflet/leaflet.css" />
+	<link rel="stylesheet" href="css/style.css" />
 
-<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+		integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
-<script src="/leaflet/leaflet.js"></script>
-<script src="jquery/jquery.min.js"></script>
-<script src="chart.js/chart.js"></script>
+	<script src="/leaflet/leaflet.js"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="chart.js/chart.js"></script>
 
-<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
-
-
-<script src="/leaflet/leaflet.js"></script>
-
-<script src="chart.js/chart.js"></script>
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
 
 
-<script src="/jquery/jquery.min.js"></script>
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
-<script src="/turf/turf.min.js"></script>
-<script src="/private/tokens.js"></script>
-<script src="data/desnsityAreas.js"></script>
-<script src="/js/createPolygons.js"></script>
-<script src="/js/autocomplete.js"></script>
-<script src="data/accidents.js"></script>
+	<script src="/leaflet/leaflet.js"></script>
+
+	<script src="chart.js/chart.js"></script>
+
+
+	<script src="/jquery/jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+	<script src="/turf/turf.min.js"></script>
+	<script src="/private/tokens.js"></script>
+	<script src="data/desnsityAreas.js"></script>
+	<script src="/js/createPolygons.js"></script>
+	<script src="/js/autocomplete.js"></script>
+	<script src="data/accidents.js"></script>
+
 
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-		<a class="navbar-brand" href="/">Safe route</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<a class="navbar-brand" href="/">Safe Route</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+			aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
-		  </button>
-		  <div class="collapse navbar-collapse" id="navbar">
+		</button>
+		<div class="collapse navbar-collapse" id="navbar">
 			<div class="navbar-nav">
-			  <a class="nav-item nav-link " href="/">Home <span class="sr-only">(current)</span></a>
-			  <a class="nav-item nav-link active" href="/howto">How-To</a>
-			  <a class="nav-item nav-link" href="/impressum">Impressum</a>
+				<a class="nav-item nav-link " href="/">Home <span class="sr-only">(current)</span></a>
+				<a class="nav-item nav-link active" href="/howto">How-To</a>
+				<a class="nav-item nav-link" href="/imprint">Imprint</a>
 			</div>
-		  </div>
-	  </nav>
+		</div>
+	</nav>
+
 
 	<div class="explanations">
-		<div id="statistics_legend">
-			<h4>Explanation of statistics</h4>
-			All data were taken from the <a href="https://unfallatlas.statistikportal.de">German Accident Atlas</a>.
-			The shown data is from 2019.
-			<br>FAQs and explanations of accident participants and the heaviest accident result regarding injuries can
-			be found here:
-			<a href="https://unfallatlas.statistikportal.de/_info2020.html">German Accident Atlas | explanatory
-				notes</a>
-			<br> Data of previous years can be found here: <a
-				href="https://unfallatlas.statistikportal.de/_opendata2020.html">German Accident Atlas | OpenData</a>.
-			As well as additional information within the downloadable PDF containing the Metadata.
-		</div>
-		<div id="risk_legend">
-			<h4>Risk level explanation</h4>
-			<p>
-				The risk levels were derived from the accidents. Therefore a density map with 5 levels was created.
-				That means, level 1 has the lowest density of accidents and level 5 the highest density. The areas
-				shown in the map are levels 3 (Low risk) to 5 (High risk).
-				With this level 5 routes avoid areas where the most accidents happened, while level 3 routes already
-				avoid
-				areas with fewer accidents. The possibility to avoid level 1 or 2 is not given, because with this you
-				could drive almost nowhere and it does not make a lot of sense to avoid a street just because there
-				happened just one accident within one year.
+		<button class="collapsible">What do the accident markers represent? </button>
+		<div class="content">
+			<p>The accident markers represent accidents happened in Münster in 2019.
+				If you click on one of the markers there will be further information concerning the accident.
+				It is shown whether a bicycle or a pedestrian was involved in the accident.
+				In addition, it indicates at what time and in which month the accident happened.
 			</p>
 		</div>
+		<button class="collapsible">What do the risk areas represent? </button>
+		<div class="content">
+			<p>The risk areas represent areas where a lot of accidents happened, so areas where there is a higher risk
+				of being involved in an accident.
+				The risk areas are heatmaps based on the density of the accident markers, created initially in QGIS.
+				A heatmap with 5 levels was created.
+				That means, level 1 has the lowest density of accidents and level 5 the highest density.
+				The areas shown in the map are level 3 (low risk), level 4 (medium risk) and level 5 (High risk).
+				In the lower right corner you can see a legend concerning the risk levels.
+				The areas for level 1 or 2 are not shown, because with this you could drive almost nowhere and it
+				does not make a lot of sense to avoid a street just because there happened just one accident within one
+				year.
+			</p>
+		</div>
+		<button class="collapsible">How can I insert a route?</button>
+		<div class="content">
+			<p>With the button in the lower left you can hide and show the route settings.
+				You can decide if the routes should be either calculated for cars, for bicycle or for pedestrian.
+				You can insert the start and the finish of the route.
+				The format for the start and finish (so the way you should input it), is suggested in grey in the start
+				and finish input box, if you have not alreay written something in it.
+				During writing something in these both boxes, there are suggestions for the place you are searching for.
+				By hitting the "Submit"-button, the calculation of the route starts.
+				The occuring loading bar in the middle of the screen shows when the calculation is finished.
+				You can start a new calculation at any time.
+			</p>
+		</div>
+		<button class="collapsible">What is the meaning of the different routes?</button>
+		<div class="content">
+			<p>Different routes are avoiding different risk areas.
+				There are four different kinds of routes.
+				The "Shortest route" is avoiding no accidents, the "Low risk avoiding route" avoids areas with a low
+				risk for accidents, the "Medium risk avoiding route" avoids areas with a medium risk for accidents and
+				the "High risk avoiding route" avoids areas with high risk for accidents.
+				You can activate and deactivate the display of the different routes in the layers control in the upper
+				right.
+				Furthermore there is a corresponding legend right above the "Risk Levels" legend in the lower right.
+				This legend adjusts depending on which routes are enabled in the layers control.
+			</p>
+		</div>
+		<button class="collapsible">Can I export the route to a navigation system like Google Maps?</button>
+		<div class="content">
+			<p>Yes you can!
+				Directly next to the route input, further route information is displayed.
+				There you can see the risk level of each route, its duration and its length.
+				Furthermore there is a link to Google Maps.
+				By clicking this link you export the route to Google Maps.
+				In Google Maps you then can use a route description to navigate or send the route description to your
+				smartphone, if you are not already using it.
+			</p>
+		</div>
+		<button class="collapsible">What can I do with the layers control?</button>
+		<div class="content">
+			<p>In the layers control in the upper right you can select if you either want to use the OpenStreetMap as
+				base
+				layer, or the Esri World Imagery.
+				Besides you can decide by checking or unchecking the boxes if the Risk areas, so the area where a lot of
+				accidents happened, and the Accident markers, so the position of the accidents are shown or not.
+				If a route has been entered, it is possible to activate and deactivate the display of the different
+				routes.</p>
+		</div>
+		<button class="collapsible">Am I able to zoom the map in and out?</button>
+		<div class="content">
+			<p>By the +/- button in the upper left you can zoom in and out the map.
+				But there is a limit, the maximal map extent is limited to the region of Münster.</p>
+		</div>
+		<button class="collapsible">What kind of information do the statistics contain?</button>
+		<div class="content">
+			Statistics are displayed for all routes that have just been calculated. In the selection above the
+			statistics you can switch accordingly and decide for which route you want to view the statistics.
+			All data were taken from the <a href="https://unfallatlas.statistikportal.de" target="_blank">German
+				Accident Atlas</a>.
+			The shown data is for 2019.
+			<br>FAQs and explanations of accident participants and the heaviest accident result regarding injuries can
+			be found here:
+			<a href="https://unfallatlas.statistikportal.de/_info2020.html" target="_blank">German Accident Atlas |
+				explanatory
+				notes</a>.
+			<br> Data of previous years can be found here: <a
+				href="https://unfallatlas.statistikportal.de/_opendata2020.html" target="_blank">German Accident Atlas |
+				OpenData</a>.
+			As well as additional information within the downloadable PDF containing the Metadata.
+		</div>
+		<button class="collapsible">Can I use the application on my smartphone or tablet?</button>
+		<div class="content">
+			<p>Yes it is an application designed with responsible design, which you can also use on smaller devices like
+				a smartphone or a tablet.</p>
+		</div>
 	</div>
+
+
+	<script>
+		// for the collapse of the FAQ 
+		var coll = document.getElementsByClassName("collapsible");
+		var i;
+
+		for (i = 0; i < coll.length; i++) {
+			coll[i].addEventListener("click", function () {
+				this.classList.toggle("active");
+				var content = this.nextElementSibling;
+				if (content.style.maxHeight) {
+					content.style.maxHeight = null;
+				} else {
+					content.style.maxHeight = content.scrollHeight + "px";
+				}
+			});
+		}
+	</script>
+
+
 </body>
+
 </html>

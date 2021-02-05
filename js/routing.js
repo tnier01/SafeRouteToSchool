@@ -30,7 +30,7 @@ mymap.on('click', function (e) {
 	});
 });
 
-mymap.setMinZoom(10);
+mymap.setMinZoom(12);
 
 /*
 There is a layer for the risk area, and for each of the avoiding risk area routes. 
