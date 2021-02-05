@@ -1,12 +1,13 @@
 # SafeRouteToSchool
+An application to avoid accidents on your routes through the city of Münster. 
+After submitting the route, different routes can be selected that avoid different risk areas where accidents are more likely to occur in Münster. All routes are displayed on a map, and it is possible to view additional statistics and to export the routes to Google Maps.
+A detailed How-To can be found after installation of the application. 
 
-#### Accident data source
-https://unfallatlas.statistikportal.de/
+This application was developed as part of the class "Geoinformation in Society" in the winterterm 2020/21 at [ifgi](https://www.uni-muenster.de/Geoinformatics/en/index.html) at the [University of Münster](https://www.uni-muenster.de/en/). 
+
 
 ## Getting Started
-
-
-To get a local copy up and running follow these simple steps.
+To get a local copy of the application and to run it, follow these simple steps.
 
 ### Prerequisites
 
@@ -20,7 +21,7 @@ npm install npm@latest -g
 
 1. Clone the repo
 ```sh
-git clone https://github.com/NJaku01/NJaku01.github.io.git
+git clone https://github.com/tnier01/SafeRouteToSchool.git
 ```
 2. Install NPM packages
 ```sh
@@ -40,20 +41,11 @@ npm start
 
 7. Go to the application under https://localhost:3000
 
-#### next tasks 
-- responsive design (Nick)
-- adapt month to real month in the popup (Jan)
-- adapt color of the routes (Jan)
-- legend of the risk levels should have the same size like routes legend (Jan) 
-- finish how-to and impressum (Tom)
-- video (Aysel) 
-- delete route markers + route instructions (Tom) 
-- only show every second number in the statistics (Jan) 
-- insert the new density map in our application and proof if it works (Mirjeta)
-- limit the map extent to Münster (Mirjeta) 
+## Accident Data Source
+https://unfallatlas.statistikportal.de/
 
-#### open questions
-- name? (SafeRouteToSchool vs. SafeRoute)
+
+
 
 
 
