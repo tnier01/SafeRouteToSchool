@@ -15,19 +15,32 @@ function style(feature) {
     };
 }
 
+let months = {
+    "01" : "January",
+    "02" : "February",
+    "03" : "March",
+    "04" : "April",
+    "05" : "May",
+    "06" : "June",
+    "07" : "July",
+    "08" : "August",
+    "09" : "September",
+    "10" : "October",
+    "11" : "November",
+    "12" : "December"
+};
+
+let participant = {
+    1 : "yes",
+    0 : "no"
+}
+
 function popup(feature, layer) {
-
-    let bike;
-    if (feature.properties.IstRad == 1) {
-        bike = true
-    } else {
-        bike = false
-    }
-
     layer.bindPopup(
+        "<b>Bicycle involved: </b>" + participant[feature.properties.IstRad] + "<br>" +
+        "<b>Pedestrian involved: </b>" + participant[feature.properties.IstFuss] + "<br>" +
         "<b>Time: </b>" + feature.properties.USTUNDE + " h <br>" +
-        "<b>Month: </b>" + feature.properties.UMONAT + "<br>" +
-        "<b>Bicycle involved: </b>" + bike
+        "<b>Month: </b>" + months[feature.properties.UMONAT]
     )
 }
 
@@ -38,13 +51,14 @@ accidentMarkers = L.geoJSON(accidents, {
     onEachFeature: popup
 }).addTo(mymap);
 
-layersControl.addOverlay(accidentMarkers, "Accident Markers");
+layersControl.addOverlay(accidentMarkers, "Accident markers");
 
 chartW= []
 chartC= []
 chartT= []
 chartL= []
-
+chartP= []
+chartH= []
 
 accidentMarkers.bringToFront();
 
@@ -186,6 +200,8 @@ function createChart(geojson, number) {
         chartC[number].destroy()
         chartT[number].destroy()
         chartL[number].destroy()
+        chartP[number].destroy()
+        chartH[number].destroy()
     }
 
 
@@ -203,6 +219,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -225,6 +249,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -247,6 +279,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -269,6 +309,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -280,10 +328,9 @@ function createChart(geojson, number) {
     });
 
 
-    /** 
-    let ctp = document.getElementById('participants').getContext('2d');
+    let ctp = document.getElementById('participants' + number).getContext('2d');
 
-    let chartP = new Chart(ctp, {
+    chartP[number] = new Chart(ctp, {
         type: 'bar',
         data: dataParticipants,
         options: {
@@ -293,6 +340,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -303,9 +358,9 @@ function createChart(geojson, number) {
         }
     });
 
-    let cth = document.getElementById('time').getContext('2d');
+    let cth = document.getElementById('time' + number).getContext('2d');
 
-    let chartH = new Chart(cth, {
+    chartH[number] = new Chart(cth, {
         type: 'bar',
         data: dataTime,
         options: {
@@ -315,6 +370,14 @@ function createChart(geojson, number) {
                     display: true,
                     ticks: {
                         beginAtZero: true,
+                        maxTicksLimit: 4,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+       
+                        },
                     }}]
             },
             title: {
@@ -323,7 +386,7 @@ function createChart(geojson, number) {
                 fontSize: 20
             }
         }
-    });*/
+    });
 }
 
 

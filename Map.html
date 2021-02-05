@@ -3,7 +3,7 @@
 
 <head>
 
-	<title>Map of Münster</title>
+	<title>Safe Route</title>
 
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,8 @@
 
 	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
 		integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+	<link rel="stylesheet" href="/markers/leaflet.awesome-markers.css"></script>
 
 	<script src="/leaflet/leaflet.js"></script>
 	<script src="jquery/jquery.min.js"></script>
@@ -28,7 +30,9 @@
 
 	<script src="/jquery/jquery.min.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
+	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+	<script src="/markers/leaflet.awesome-markers.min.js"></script>
 	<script src="/turf/turf.min.js"></script>
 	<script src="/private/tokens.js"></script>
 	<script src="data/desnsityAreas.js"></script>
@@ -41,7 +45,7 @@
 <body>
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-		<a class="navbar-brand" href="/">Safe route</a>
+		<a class="navbar-brand" href="/">Safe Route</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		  </button>
@@ -49,7 +53,7 @@
 			<div class="navbar-nav">
 			  <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
 			  <a class="nav-item nav-link" href="/howto">How-To</a>
-			  <a class="nav-item nav-link" href="/impressum">Impressum</a>
+			  <a class="nav-item nav-link" href="/imprint">Imprint</a>
 			</div>
 		  </div>
 	  </nav>
@@ -69,6 +73,8 @@
 
 					<div id="routeSelection" class="sidebar" style="visibility: visible;">
 						<div class="sidebar" id="ajaxLoad"></div>
+						<div class="row">
+							<div class="col-md-6">
 						<table>
 							<tr>
 								<td><span>Transport:</span></td>
@@ -82,27 +88,35 @@
 							</tr>
 							<tr>
 								<td><label for="start">Start:</label></td>
-								<td><input type="text" class="input form-control" id="start" name="Start" style="width: 100%;" placeholder="Street Nr., City, Country"></td>
+								<td><input type="text" class="input form-control autoComplete" id="start" name="Start" style="width: 100%;" placeholder="Street Nr., City, Country"></td>
 							</tr>
 							<tr>
 								<td><label for="finish">Finish:</label></td>
-								<td><input type="text" class="input form-control" id="finish" name="Finish" style="width: 100%;" placeholder="Street Nr., City, Country"></td>
+								<td><input type="text" class="input form-control autoComplete" id="finish" name="Finish" style="width: 100%;" placeholder="Street Nr., City, Country"></td>
 							</tr>
 							<tr>
 								<td><button id="submit" class="button btn btn-primary">Submit</button></td>
-								<td></td>
+								<td><input type="checkbox" name="markers" value="higlight" checked="checked">  Highlight start and finish&nbsp;&nbsp;</td>
 							</tr>
 						</table>
+						</div>
+						<div class="col-md-6">
+							Route information:
+						 <div  id="info">
+
+						 </div>
+						</div>
+					</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="col-xxl-4 col-lg-6">
 			<ul class="nav nav-tabs">
-				<li><a class="nav-link hideme" data-toggle="tab" id="none" href="#home">None</a></li>
-				<li><a class="nav-link active hideme" data-toggle="tab" id="level5" href="#menu1">Level 5</a></li>
-				<li><a class="nav-link hideme" data-toggle="tab" id="level4" href="#menu2">Level 4</a></li>
-				<li><a class="nav-link hideme" data-toggle="tab" id="level3" href="#menu3">Level 3</a></li>
+				<li><a class="nav-link hideme" data-toggle="tab" id="none" href="#home">Shortest</a></li>
+				<li><a class="nav-link active hideme" data-toggle="tab" id="level5" href="#menu1">Avoid high risk</a></li>
+				<li><a class="nav-link hideme" data-toggle="tab" id="level4" href="#menu2">Avoid medium risk</a></li>
+				<li><a class="nav-link hideme" data-toggle="tab" id="level3" href="#menu3">Avoid low risk</a></li>
 			  </ul>
 
 			  <div class="tab-content">
@@ -128,6 +142,18 @@
 						<div class="col-md-6">
 							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
 								<canvas id="type0" height = "50%" width="50%"></canvas>
+							  </div>
+						</div>
+					  </div>
+					  <div class="row">
+						<div class="col-xs-12 col-md-6">
+							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
+								<canvas id="participants0" height = "50%" width="50%"></canvas>
+							  </div>
+						</div>
+						<div class="col-md-6">
+							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
+								<canvas id="time0" height = "50%" width="50%"></canvas>
 							  </div>
 						</div>
 					  </div>
@@ -158,6 +184,18 @@
 							  </div>
 						</div>
 					  </div>
+					  <div class="row">
+						<div class="col-xs-12 col-md-6">
+							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
+								<canvas id="participants5" height = "50%" width="50%"></canvas>
+							  </div>
+						</div>
+						<div class="col-md-6">
+							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
+								<canvas id="time5" height = "50%" width="50%"></canvas>
+							  </div>
+						</div>
+					  </div>
 					</div>
 				<div id="menu2" class="tab-pane fade">
 					<div class="row">
@@ -181,6 +219,18 @@
 						<div class="col-md-6">
 							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
 								<canvas id="type4" height = "50%" width="50%"></canvas>
+							  </div>
+						</div>
+					  </div>
+					  <div class="row">
+						<div class="col-xs-12 col-md-6">
+							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
+								<canvas id="participants4" height = "50%" width="50%"></canvas>
+							  </div>
+						</div>
+						<div class="col-md-6">
+							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
+								<canvas id="time4" height = "50%" width="50%"></canvas>
 							  </div>
 						</div>
 					  </div>
@@ -210,6 +260,18 @@
 							  </div>
 						</div>
 					  </div>
+					  <div class="row">
+						<div class="col-xs-12 col-md-6">
+							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
+								<canvas id="participants3" height = "50%" width="50%"></canvas>
+							  </div>
+						</div>
+						<div class="col-md-6">
+							<div class="chart-container" style="position: relative; width: 90%; height: 90%;">
+								<canvas id="time3" height = "50%" width="50%"></canvas>
+							  </div>
+						</div>
+					  </div>
 				</div>
 			  </div>
 			</div>
@@ -229,15 +291,24 @@
 	<script src="js/L.TileLayer.BetterWMS.js"></script>
 
 	<script>
-		var mymap = L.map('leafletMap').setView([51.9606649, 7.6261347], 13);
+		var mymap = L.map('leafletMap')
+			.setView([51.9606649, 7.6261347], 13);
+
+		var southWest = L.latLng(51.86758805107504, 7.4562835693359375);
+        var northEast = L.latLng(52.07233159817613,7.813339233398437);
+		var mybounds = L.latLngBounds(southWest, northEast);
+				
+		mymap.setMaxBounds(mybounds)
 
 		var osmlayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: 'Map data: &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+			minZoom:12,
 			maxZoom: 18
 		}).addTo(mymap);
 
 		var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+			minZoom: 12,
 			maxZoom: 18
 		});
 	</script>

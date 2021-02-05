@@ -16,6 +16,7 @@ app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use('/turf', express.static(__dirname + '/node_modules/@turf/turf'));
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 app.use('/typeahead', express.static(__dirname + '/node_modules/corejs-typeahead/dist'));
+app.use('/markers', express.static(__dirname + '/node_modules/leaflet.awesome-markers/dist'));
 
 app.use('/chart.js', express.static(__dirname + '/node_modules/chart.js/dist'));
 
@@ -29,8 +30,8 @@ app.get('/', (req, res) => {
 app.get('/howto', (req, res) => {
     res.sendFile(__dirname + '/HowTo.html')
 })
-app.get('/impressum', (req, res) => {
-    res.sendFile(__dirname + '/Impressum.html')
+app.get('/imprint', (req, res) => {
+    res.sendFile(__dirname + '/imprint.html')
 })
 
 const port = 3000;
