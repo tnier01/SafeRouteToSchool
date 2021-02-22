@@ -1,9 +1,8 @@
-function getColor(p) {
-    return p.IstRad == 1 ? '#ff1200':
-        //p.IstFuss == 1 ? '#3c0e99':
-        '#ff7800';
-}
-
+/**
+ * style function for accident markers
+ * @param feature
+ * @returns {{fillColor: string, color: string, fillOpacity: number, weight: number, radius: number, opacity: number}}
+ */
 function style(feature) {
     return {
         fillColor: '#ff5d5a', //getColor(feature.properties),
@@ -15,6 +14,7 @@ function style(feature) {
     };
 }
 
+// assign months to numbers for popup
 let months = {
     "01" : "January",
     "02" : "February",
@@ -30,11 +30,18 @@ let months = {
     "12" : "December"
 };
 
+// assign yes no to participant information for popup
 let participant = {
     1 : "yes",
     0 : "no"
 }
 
+//
+/**
+ * create accident popup
+ * @param feature
+ * @param layer
+ */
 function popup(feature, layer) {
     layer.bindPopup(
         "<b>Bicycle involved: </b>" + participant[feature.properties.IstRad] + "<br>" +
@@ -44,6 +51,9 @@ function popup(feature, layer) {
     )
 }
 
+/**
+ * add accidents to map
+ */
 accidentMarkers = L.geoJSON(accidents, {
     pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, style(feature));
@@ -51,8 +61,14 @@ accidentMarkers = L.geoJSON(accidents, {
     onEachFeature: popup
 }).addTo(mymap);
 
+// add accidents to layer control
 layersControl.addOverlay(accidentMarkers, "Accident markers");
+accidentMarkers.bringToFront();
 
+/**
+ * Arrays the chart data is added to
+ * @type {Array}
+ */
 chartW= []
 chartC= []
 chartT= []
@@ -60,27 +76,11 @@ chartL= []
 chartP= []
 chartH= []
 
-accidentMarkers.bringToFront();
-
-/*
-
-var bikeAccidents = L.geoJSON(accidents, {
-    filter: function(feature, layer) {
-        return feature.properties.IstRad == "1";
-    }
-})//.addTo(mymap);
-
-bikeAccidents = accidents;
-bikeAccidents.features = [];
-
-
-bikeAccidents.features = accidents.features.filter(item => {
-    if(item.properties.IstRad == "1") {
-        return item;
-    }
-});
-*/
-
+/**
+ * Extract information for charts from geoJSON
+ * @param arr (geoJSON with data from Unfallatlas)
+ * @returns {{averageTime: *, light: *, weekdays: *, time: *, category: *, type: *, participants: *}}
+ */
 function updateObj(arr) {
     let averageTime = 0;
     let weekdays = [0, 0, 0, 0, 0, 0, 0];  //new Array(7);
@@ -113,13 +113,19 @@ function updateObj(arr) {
             }
         }
     });
-    console.log(time);
+
     averageTime = averageTime / arr['features'].length;
     let stats = {"weekdays": weekdays, "averageTime": averageTime, "category": category,
         "light": light, "type": type, 'participants': participants, 'time': time};
     return stats;
 }
 
+/**
+ * Create actual charts with chart.js
+ * Assign data, labels, colors
+ * @param geojson
+ * @param number
+ */
 function createChart(geojson, number) {
 
     let obj = updateObj(geojson);
@@ -192,7 +198,6 @@ function createChart(geojson, number) {
 
     console.log(dataTime);
 
-    
 
     if(chartW[number] !== undefined){
         console.log("redraw")
@@ -204,10 +209,7 @@ function createChart(geojson, number) {
         chartH[number].destroy()
     }
 
-
     let ctw = document.getElementById('weekdays' +number).getContext('2d');
-
-
 
     chartW[number] = new Chart(ctw, {
         type: 'bar',
@@ -327,7 +329,6 @@ function createChart(geojson, number) {
         }
     });
 
-
     let ctp = document.getElementById('participants' + number).getContext('2d');
 
     chartP[number] = new Chart(ctp, {
@@ -388,13 +389,3 @@ function createChart(geojson, number) {
         }
     });
 }
-
-
-//createChart(accidents);
-
-
-
-
-
-
-

@@ -49,7 +49,7 @@ There is a layer for the risk area, and for each of the avoiding risk area route
 In each of these routes, the polyline and the corresponding buffers (are commented out, as they are only used for calculation and should not be displayed) and markers are stored. 
 Only the areaLayer, noneLayer are activated automatically, the other ones can be activated by the layercontrol. 
 */
-var areaLayer = new L.LayerGroup();
+var areaLayer = new L.FeatureGroup();
 areaLayer.addTo(mymap);
 var noneLayer = new L.LayerGroup();
 noneLayer.addTo(mymap);
@@ -71,6 +71,11 @@ layersControl.addOverlay(areaLayer, "Risk areas");
 
 var legend_risk = L.control({ position: 'bottomright' });
 
+/**
+ * Create legend for risk areas
+ * @param map
+ * @returns {any}
+ */
 legend_risk.onAdd = function (map) {
 
 	var div = L.DomUtil.create("div", "legend");
@@ -78,8 +83,6 @@ legend_risk.onAdd = function (map) {
 	div.innerHTML += '<i style="background: #690000"></i><span>High risk</span><br>';
 	div.innerHTML += '<i style="background: #e22b00""></i><span>Medium risk</span><br>';
 	div.innerHTML += '<i style="background: #ffbc48"></i><span>Low risk</span><br>';
-	//div.innerHTML += '<i style="background: #ff8080"></i><span>Level 2</span><br>';
-	//div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
 	return div;
 };
@@ -87,8 +90,14 @@ legend_risk.onAdd = function (map) {
 legend_risk.addTo(mymap);
 startStop.addTo(mymap)
 
+
 var legend_routes = L.control({ position: 'bottomright' });
 
+/**
+ * Create legend for routes
+ * @param map
+ * @returns {any}
+ */
 legend_routes.onAdd = function (map) {
 
 	var div = L.DomUtil.create("div", "legend l_routes");
@@ -124,7 +133,6 @@ function convertTime(time) {
 	seconds = Math.round(time - hours * 3600 - minutes * 60)
 	return get2D(hours) + ":" + get2D(minutes) + ":" + get2D(seconds)
 }
-
 
 function convertlenght(length) {
 	length = length / 10;
@@ -179,9 +187,11 @@ function addInformation(information) {
 
 };
 
-
+/**
+ * Remove legends with respective layers
+ */
 mymap.on('overlayremove', function (eventLayer) {
-	if (eventLayer.name === 'Risk Areas') {
+	if (eventLayer.name === 'Risk areas') {
 		this.removeControl(legend_risk);
 	}
 	if (eventLayer.name === 'Shortest route' || eventLayer.name === 'High risk avoiding route' || eventLayer.name === 'Medium risk avoiding route' || eventLayer.name === 'Low risk avoiding route') {
@@ -193,10 +203,14 @@ mymap.on('overlayremove', function (eventLayer) {
 	}
 });
 
+/**
+ * add legends with respective layers
+ */
 mymap.on('overlayadd', function (eventLayer) {
-	if (eventLayer.name === 'Risk Areas') {
+	if (eventLayer.name === 'Risk areas') {
 		this.addControl(legend_risk);
-		accidentMarkers.bringToFront();
+		//accidentMarkers.bringToFront();
+        areaLayer.bringToBack();
 	}
 	if (eventLayer.name === 'Shortest route' || eventLayer.name === 'High risk avoiding route' || eventLayer.name === 'Medium risk avoiding route' || eventLayer.name === 'Low risk avoiding route') {
 		this.removeControl(legend_routes);
@@ -229,7 +243,11 @@ function addToMap(geojson, LayerGroup, color) {
 	LayerGroup.addLayer(geometry);
 }
 
-// convert coordinate to geocode address
+/**
+ * convert coordinate to geocode address
+ * @param pos
+ * @param selector
+ */
 function setAddress(pos, selector) {
 	let input = pos.latlng;
 	$.ajax({
