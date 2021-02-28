@@ -9,18 +9,23 @@ var class4PointsInsidePolygon;
 var class3PointsInsidePolygon;
 var routeLayerSelectionActive = false;
 
+// build a marker with the start symbol which can later be use
 var startIcon  = L.AwesomeMarkers.icon({
 	icon: 'play',
 	markerColor: 'blue',
 	prefix: 'fa'
   });
 
+// build a marker with the destination symbol which can later be use
 var stopIcon = L.AwesomeMarkers.icon({
 	icon: 'flag',
 	markerColor: 'blue',
 	prefix: 'fa'
   });
 
+  /**
+   * Ehrn the user clicks on the map a popup appears. Here the user can set the clicked point as start or destination of the route
+   */
 mymap.on('click', function (e) {
 	var container = L.DomUtil.create('div'),
 		startBtn = createButton('Start', container),
@@ -42,6 +47,7 @@ mymap.on('click', function (e) {
 	});
 });
 
+//set the min zoom of the area. Therefor the user can not zoom out, so the icons are still visible
 mymap.setMinZoom(12);
 
 /*
@@ -61,6 +67,7 @@ var class3Layer = new L.LayerGroup();
 //class3Layer.addTo(mymap); commented out as it is later added to map
 var startStop = new L.LayerGroup();
 
+//used base layers in our project
 var baseLayers = {
 	"OpenStreetMap": osmlayer,
 	"Esri World Imagery": Esri_WorldImagery
@@ -123,10 +130,18 @@ legend_routes.onAdd = function (map) {
 	return div;
 };
 
+/**
+ * add a zero in front of numbers smaller than ten. For example 2 -> 02
+ * @param {*} num ninput number
+ */
 function get2D(num) {
 	return (num.toString().length < 2 ? "0" + num : num).toString();
 }
 
+/**
+ * converts a duration of seconds into hours:minutes:second
+ * @param time duration in seconds
+ */
 function convertTime(time) {
 	hours = Math.floor(time / 3600)
 	minutes = Math.floor((time - hours * 3600) / 60)
@@ -134,6 +149,10 @@ function convertTime(time) {
 	return get2D(hours) + ":" + get2D(minutes) + ":" + get2D(seconds)
 }
 
+/**
+ * Convert meters to kilometers
+ * @param {*} length  meters to convert
+ */
 function convertlenght(length) {
 	length = length / 10;
 	length = Math.round(length);
@@ -141,6 +160,10 @@ function convertlenght(length) {
 	return length;
 }
 
+/**
+ * Add the information about the route to the route information section on the main page
+ * @param {*} information  to add
+ */
 function addInformation(information) {
 
 	console.log(information)
@@ -218,6 +241,12 @@ mymap.on('overlayadd', function (eventLayer) {
 	}
 });
 
+/**
+ * Creats a simple HTML button
+ * @param {*} label of the button
+ * @param {*} container where the button should be place
+ * @param {*} id of the button
+ */
 function createButton(label, container, id) {
 	var btn = L.DomUtil.create('button', '', container);
 	btn.setAttribute('type', 'button');
@@ -227,6 +256,12 @@ function createButton(label, container, id) {
 	return btn;
 }
 
+/**
+ * Adds a geojson feature to the map
+ * @param {*} geojson to add
+ * @param {*} LayerGroup the geojson belongs to
+ * @param {*} color the geojson should have
+ */
 function addToMap(geojson, LayerGroup, color) {
 	//LayerGroup.clearLayers();
 	let stroke = true;
@@ -820,11 +855,19 @@ L.Control.Layers.include({
 	}
 });
 
+/**
+ * Shows an specific element. Is used for example to show the loading screen
+ * @param {*} id of the element which should be showd
+ */
 function show(id) {
 	var element = document.getElementById(id);
 	element.classList.remove("hideme");
 }
 
+/**
+ * Hides an specific element. Is used for example to hide the loading screen
+ * @param {*} id of the element which should be showd
+ */
 function hide(id) {
 	var element = document.getElementById(id);
 	element.classList.add("hideme");
@@ -846,7 +889,10 @@ function toggle_visibility(divId, buttonId) {
 	}
 }
 
-
+/**
+ * Create the link which opens a specific route in google maps
+ * @param {*} route which the link should be generated from
+ */
 function createLink(route) {
 	let profile = $("input[name='transport']:checked").val();
 	let segments = route.features[0].properties.segments
