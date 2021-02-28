@@ -141,9 +141,7 @@ body {
 	/* or: left: 50%; */
 }
 
-.navbar {
-	height: 5vh;
-}
+
 
 @media (min-width: 1400px) {
 	.col-xxl {
